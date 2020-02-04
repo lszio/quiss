@@ -7,8 +7,8 @@ My AI for [screeps](http://screeps.com)
 module.exports = {
     email: 'YOUR_EMAIL',
     password: 'YOUR_PASSWORD',
-    localPath: 'C:\Users\YOUR_USERNAME\AppData\Local\Screeps\scripts\127_0_0_1___21025\default',
-    serverPath: 'C:\Users\YOUR_USERNAME\AppData\Local\Screeps\scripts\YOU_SERVER\default'
+    localPath: 'C:\\Users\\YOUR_USERNAME\\AppData\\Local\\Screeps\\scripts\\127_0_0_1___21025\\default',
+    serverPath: 'C:\\Users\\YOUR_USERNAME\\AppData\\Local\\Screeps\\scripts\\YOU_SERVER\\default'
 }
 ```
 2. Start game
