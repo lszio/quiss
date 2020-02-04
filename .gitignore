@@ -1,0 +1,5 @@
+secret.js
+node_modules
+dist
+.tscache
+package-lock.json

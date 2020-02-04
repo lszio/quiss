@@ -1,0 +1,27 @@
+{
+  "name": "screepsai",
+  "version": "1.0.0",
+  "description": "My AI for screeps",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitee.com/Liszt21/ScreepsAI.git"
+  },
+  "author": "Liszt21",
+  "license": "ISC",
+  "dependencies": {
+    "@types/lodash": "^3.10.2",
+    "@types/node": "^13.7.0",
+    "@types/screeps": "^3.0.0",
+    "grunt": "^1.0.4",
+    "grunt-contrib-clean": "^2.0.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-watch": "^1.1.0",
+    "grunt-screeps": "^1.4.0",
+    "grunt-ts": "^6.0.0-beta.22",
+    "typescript": "^3.7.5"
+  }
+}
