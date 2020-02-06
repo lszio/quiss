@@ -1,8 +1,8 @@
+import mount from './mount'
+import base from './base'
 
 module.exports.loop = function(): void {
-    console.log(sayHello('world!'))
+    mount()
+    base()
 }
 
-function sayHello(str: string): string {
-    return 'hello' + str
-}
