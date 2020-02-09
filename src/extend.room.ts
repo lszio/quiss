@@ -7,28 +7,39 @@ export default function () {
 class RoomExtension extends Room {
     private _factory: StructureFactory
     private _sources: Source[]
-    private _towers: StructureTower
+    private _mineral: Mineral
 
     public sourcesGetter(): Source[] | undefined {
         if (this._sources) return this._sources
-
-        // 如果内存中存有 id 的话就读取并返回
-        // source 不会过期，所以不需要进行处理
         if (this.memory.sourceIds) {
             this._sources = this.memory.sourceIds.map(id => Game.getObjectById(id))
             return this._sources
         }
-
-        // 没有 id 就进行搜索
         const sources = this.find(FIND_SOURCES)
         if (sources.length <= 0) {
             console.log(`[${this.name} base] 异常访问，房间内没有找到 source`)
             return undefined
         }
-
-        // 缓存数据并返回
         this.memory.sourceIds = sources.map(s => s.id)
         this._sources = sources
         return this._sources
+    }
+    public mineralGetter(): Mineral | undefined {
+        if (this._mineral) return this._mineral
+
+        if (this.memory.mineralId) {
+            this._mineral = Game.getObjectById(this.memory.mineralId)
+            return this._mineral
+        }
+
+        const mineral = this.find(FIND_MINERALS)[0]
+        if (!mineral) {
+            console.log(`[${this.name} base] 异常访问，房间内没有找到 mineral`)
+            return undefined
+        }
+
+        this.memory.mineralId = mineral.id
+        this._mineral = mineral
+        return this._mineral
     }
 }

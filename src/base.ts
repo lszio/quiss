@@ -24,21 +24,23 @@ export default function() {
             }
         }
     }
-    let upgrading = false;
     if(!Game.creeps['Upgrader']){
         Game.spawns['Spawn1'].spawnCreep([MOVE,WORK,CARRY],'Upgrader')
     }else{
         let upgrader = Game.creeps['Upgrader'];
-        if(upgrading && upgrader.store[RESOURCE_ENERGY] == 0) {
-            upgrading = false;
+        if (!upgrader.memory.working) {
+            upgrader.memory.working = false;
+        }
+        if(upgrader.memory.working && upgrader.store[RESOURCE_ENERGY] == 0) {
+            upgrader.memory.working = false;
             upgrader.say('🔄 harvest');
         }
-        if(!upgrading && upgrader.store.getFreeCapacity() == 0) {
-            upgrading = true;
+        if(!upgrader.memory.working && upgrader.store.getFreeCapacity() == 0) {
+            upgrader.memory.working = true;
             upgrader.say('⚡ upgrade');
         }
 
-        if(upgrading) {
+        if(upgrader.memory.working) {
             if(upgrader.upgradeController(upgrader.room.controller) == ERR_NOT_IN_RANGE) {
                 upgrader.moveTo(upgrader.room.controller, {visualizePathStyle: {stroke: '#ffffff'}});
             }
@@ -49,21 +51,23 @@ export default function() {
             }
         }
     }
-    let building = false;
     if(!Game.creeps['Builder']) {
         Game.spawns['Spawn1'].spawnCreep([MOVE,WORK,CARRY],'Builder')
     }else{
         let builder = Game.creeps['Builder'];
-        if(building && builder.store[RESOURCE_ENERGY] == 0) {
-            building = false;
+        if(!builder.memory.working){
+            builder.memory.working = false;
+        }
+        if(builder.memory.working && builder.store[RESOURCE_ENERGY] == 0) {
+            builder.memory.working = false;
             builder.say('🔄 harvest');
         }
-        if(!building && builder.store.getFreeCapacity() == 0) {
-            building = true;
+        if(!builder.memory.working && builder.store.getFreeCapacity() == 0) {
+            builder.memory.working = true;
             builder.say('⚡ build');
         }
 
-        if(building) {
+        if(builder.memory.working) {
             let sites = builder.room.find(FIND_CONSTRUCTION_SITES);
             if(builder.build(sites[0]) == ERR_NOT_IN_RANGE) {
                 builder.moveTo(sites[0], {visualizePathStyle: {stroke: '#ffffff'}});
@@ -75,26 +79,31 @@ export default function() {
             }
         }
     }
-    let repairing = false;
     if(!Game.creeps['Repairer']) {
         Game.spawns['Spawn1'].spawnCreep([MOVE,WORK,CARRY],'Repairer')
     }else{
         let repairer = Game.creeps['Repairer'];
-        if(repairing && repairer.store[RESOURCE_ENERGY] == 0) {
-            repairing = false;
+        if(!repairer.memory.working){
+            repairer.memory.working = false;
+        }
+        if(repairer.memory.working && repairer.store[RESOURCE_ENERGY] == 0) {
+            repairer.memory.working = false;
             repairer.say('🔄 harvest');
         }
-        if(!repairing && repairer.store.getFreeCapacity() == 0) {
-            repairing = true;
+        if(!repairer.memory.working && repairer.store.getFreeCapacity() == 0) {
+            repairer.memory.working = true;
             repairer.say('⚡ repair');
         }
 
-        if(repairing) {
+        if(repairer.memory.working) {
             let targets = repairer.room.find(FIND_STRUCTURES, {
                 filter : (structure) => {
-                    return (structure.hitsMax - structure.hits) / structure.hitsMax < 0.9
+                    return (structure.hitsMax - structure.hits) / structure.hitsMax < 0.99
                 }
             });
+            targets.sort((b,a) => {
+                return ((a.hitsMax - a.hits)/ a.hitsMax) - ((b.hitsMax - b.hits) / b.hitsMax)
+            })
             if(repairer.repair(targets[0]) == ERR_NOT_IN_RANGE) {
                 repairer.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
             }

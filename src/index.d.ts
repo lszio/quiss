@@ -5,5 +5,10 @@ declare module NodeJS {
 }
 
 interface RoomMemory {
-    sourceIds: string[]
+    sourceIds: string[],
+    mineralId: string
+}
+
+interface CreepMemory {
+    working: boolean
 }
