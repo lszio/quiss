@@ -60,7 +60,7 @@ export default function() {
         }
         if(!building && builder.store.getFreeCapacity() == 0) {
             building = true;
-            builder.say('⚡ upgrade');
+            builder.say('⚡ build');
         }
 
         if(building) {
@@ -86,13 +86,13 @@ export default function() {
         }
         if(!repairing && repairer.store.getFreeCapacity() == 0) {
             repairing = true;
-            repairer.say('⚡ upgrade');
+            repairer.say('⚡ repair');
         }
 
         if(repairing) {
             let targets = repairer.room.find(FIND_STRUCTURES, {
                 filter : (structure) => {
-                    return (structure.hitsMax - structure.hits) / structure.hitsMax < 0.7
+                    return (structure.hitsMax - structure.hits) / structure.hitsMax < 0.9
                 }
             });
             if(repairer.repair(targets[0]) == ERR_NOT_IN_RANGE) {
