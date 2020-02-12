@@ -1,8 +1,8 @@
-import mount from './mount'
 import base from './base'
+import extend from './extend'
 
 module.exports.loop = function(): void {
-    mount()
+    extend()
     base()
 }
 
