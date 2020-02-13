@@ -78,9 +78,10 @@ export default function() {
             }
         }
         else {
-            if(builder.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                builder.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
-            }
+            // if(builder.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
+            //     builder.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+            // }
+            builder.charge(builder.room.storage)
         }
     }
     if(!Game.creeps['Repairer']) {
@@ -102,7 +103,7 @@ export default function() {
         if(repairer.memory.working) {
             let targets = repairer.room.find(FIND_STRUCTURES, {
                 filter : (structure) => {
-                    return (structure.hitsMax - structure.hits) / structure.hitsMax < 0.99
+                    return (structure.hitsMax - structure.hits) / structure.hitsMax < 0.99 && structure.structureType != STRUCTURE_ROAD
                 }
             });
             targets.sort((b,a) => {

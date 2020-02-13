@@ -4,15 +4,21 @@ declare module NodeJS {
     }
 }
 
-interface RoomMemory {
-    sourceIds: string[],
-    mineralId: string,
+interface Room {
+    sources: Source[],
+    tower: StructureTower,
+    factory: StructureFactory
+}
+
+interface Creep {
+    working: boolean
+    source: Source
+    charge(target: Structure)
 }
 
 interface CreepMemory {
     working: boolean
 }
-
 interface RoleConfig {
     work?: (creep: Creep) => any
     body?: BodyConfig

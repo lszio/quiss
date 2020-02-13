@@ -1,5 +1,6 @@
 export default function() {
-    _.assign(Creep.prototype,CreepExtension)
+    extendCreepProperties()
+    _.assign(Creep.prototype,CreepExtension.prototype)
 }
 
 class CreepExtension extends Creep {
@@ -9,7 +10,23 @@ class CreepExtension extends Creep {
     public work() {
 
     }
-    public charge() {
-        
+    public charge(target) {
+        if(this.store.getFreeCapacity() > 0){
+            if(this.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                this.moveTo(target)
+            }
+            return OK
+        }
+        return ERR_FULL
     }
+}
+
+let extendCreepProperties = () => {
+    Object.defineProperties(Creep.prototype,{
+        'source': {
+            get: function() {
+                return this._source;
+            }
+        }
+    })
 }
