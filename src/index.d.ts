@@ -13,11 +13,15 @@ interface Room {
 interface Creep {
     working: boolean
     source: Source
+    target: Structure
     charge(target: Structure)
+    doWork()
 }
 
 interface CreepMemory {
     working: boolean
+    sourceId: string
+    targetId: string
 }
 interface RoleConfig {
     work?: (creep: Creep) => any

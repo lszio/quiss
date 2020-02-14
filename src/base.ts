@@ -1,5 +1,20 @@
 
 export default function() {
+    if(!Game.creeps['Tester']){
+        Game.spawns['Spawn1'].spawnCreep([MOVE,WORK,CARRY],'Tester')
+    }else{
+        let tester = Game.creeps['Tester']
+        if(!tester.memory.sourceId){
+            tester.source = tester.room.sources[0]
+            console.log(tester.memory.sourceId)
+        }
+        if(!tester.memory.targetId){
+            tester.target = tester.room.storage
+            console.log(tester.memory.targetId)
+        }
+        tester.doWork()
+    }
+    
     let sources = Game.spawns['Spawn1'].room.find(FIND_SOURCES);
     if(!Game.creeps['Harvester']) {
         Game.spawns['Spawn1'].spawnCreep([MOVE,WORK,CARRY],'Harvester')
@@ -103,7 +118,7 @@ export default function() {
         if(repairer.memory.working) {
             let targets = repairer.room.find(FIND_STRUCTURES, {
                 filter : (structure) => {
-                    return (structure.hitsMax - structure.hits) / structure.hitsMax < 0.99 && structure.structureType != STRUCTURE_ROAD
+                    return (structure.hitsMax - structure.hits) / structure.hitsMax < 0.99 // && structure.structureType != STRUCTURE_ROAD
                 }
             });
             targets.sort((b,a) => {
