@@ -12,5 +12,10 @@ export default {
             }
             return OK
         }
+    },
+    builder: {
+        work: (creep) => {
+            return OK
+        }
     }
 }

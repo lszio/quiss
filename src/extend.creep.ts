@@ -16,12 +16,23 @@ class CreepExtension extends Creep {
         role[this._role].work(this)
     }
 
-    public charge(target) {
+    public charge(target=undefined) {
         if(this.store.getFreeCapacity() > 0){
-            if(this.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
-                this.moveTo(target)
+            if(!target){
+                if(!this.room.storage){
+                    if(this.harvest(this.room.sources[0]) == ERR_NOT_IN_RANGE){
+                        this.moveTo(this.room.sources[0])
+                        return OK
+                    }
+                }else{
+                    target=this.room.storage
+                }
+            }else{
+                if(this.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                    this.moveTo(target)
+                }
+                return OK
             }
-            return OK
         }
         return ERR_FULL
     }

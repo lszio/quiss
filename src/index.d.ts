@@ -3,11 +3,18 @@ declare module NodeJS {
         Extended: boolean
     }
 }
-
+// Room interface
 interface Room {
     sources: Source[],
     tower: StructureTower,
     factory: StructureFactory
+}
+
+// Creep interface
+interface CreepStatus {
+    unborn: boolean
+    working: boolean
+    workless: boolean
 }
 
 interface Creep {
@@ -41,4 +48,14 @@ interface BodyConfig {
 
 interface StaffConfig {
     
+}
+
+// Spawn interface
+interface spawnTask {
+    name: string
+    role: string
+}
+
+interface SpawnMemory {
+    tasks: spawnTask[]
 }

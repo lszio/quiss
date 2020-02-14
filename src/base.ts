@@ -6,11 +6,9 @@ export default function() {
         let tester = Game.creeps['Tester']
         if(!tester.memory.sourceId){
             tester.source = tester.room.sources[0]
-            console.log(tester.memory.sourceId)
         }
         if(!tester.memory.targetId){
             tester.target = tester.room.storage
-            console.log(tester.memory.targetId)
         }
         tester.doWork()
     }

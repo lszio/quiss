@@ -1,0 +1,7 @@
+class TaskBoard {
+
+}
+
+class Task {
+    
+}
