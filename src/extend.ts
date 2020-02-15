@@ -1,6 +1,7 @@
 import extendRoom from './extend.room'
 import extendCreep from './extend.creep'
 import extendSpawn from './extend.spawn'
+import extendStructure from './extend.structure'
 
 export default function(): void {
     if (!global.Extended) {
@@ -10,5 +11,6 @@ export default function(): void {
         extendRoom()
         extendCreep()
         extendSpawn()
+        extendStructure()
     }
 }
