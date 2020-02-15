@@ -9,11 +9,11 @@ class CreepExtension extends Creep {
     private _working: boolean;
     private _role: string;
 
-    public doWork() {
-        if(!this._role){
-            this._role='harvester'
+    public work() {
+        if(this.memory.role){
+            role[this.memory.role].work(this)
+            console.log("test")
         }
-        role[this._role].work(this)
     }
 
     public charge(target=undefined) {

@@ -23,7 +23,7 @@ interface Creep {
     source: Source
     target: Structure
     charge(target: Structure)
-    doWork()
+    work()
 }
 
 interface CreepMemory {
@@ -54,6 +54,7 @@ interface StaffConfig {
 
 // Spawn interface
 interface StructureSpawn {
+    work()
     newTask(spawnTask: SpawnTask)
 }
 

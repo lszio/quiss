@@ -10,7 +10,7 @@ class SpawnExtension extends Spawn {
         if(this.spawning){
             return ERR_BUSY
         }
-        if(this.memory.tasks.length === 0){
+        if(!this.memory.tasks || this.memory.tasks.length === 0){
             return OK
         }
         let task = this.memory.tasks[0]
