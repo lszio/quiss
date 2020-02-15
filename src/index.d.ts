@@ -18,6 +18,7 @@ interface CreepStatus {
 }
 
 interface Creep {
+    role: string
     working: boolean
     source: Source
     target: Structure
@@ -26,9 +27,10 @@ interface Creep {
 }
 
 interface CreepMemory {
-    working: boolean
-    sourceId: string
-    targetId: string
+    role?: string
+    working?: boolean
+    sourceId?: string
+    targetId?: string
 }
 interface RoleConfig {
     work?: (creep: Creep) => any
@@ -51,11 +53,19 @@ interface StaffConfig {
 }
 
 // Spawn interface
-interface spawnTask {
+interface StructureSpawn {
+    newTask(spawnTask: SpawnTask)
+}
+
+interface SpawnTask {
     name: string
-    role: string
+    level: number
+    memory: CreepMemory
 }
 
 interface SpawnMemory {
-    tasks: spawnTask[]
+    tasks: SpawnTask[]
+}
+
+interface SpawnOptions {
 }
