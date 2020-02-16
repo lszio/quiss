@@ -1,9 +1,5 @@
 
-export default function() {
-    if(!Game.creeps['Tester']){
-        Game.spawns['Spawn1'].newTask("charger","Tester")
-    }
-    
+export default function() { 
     let sources = Game.spawns['Spawn1'].room.find(FIND_SOURCES);
     if(!Game.creeps['Harvester']) {
         Game.spawns['Spawn1'].spawnCreep([MOVE,WORK,CARRY],'Harvester')

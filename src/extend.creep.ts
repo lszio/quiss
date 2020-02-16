@@ -15,6 +15,9 @@ class CreepExtension extends Creep {
         if(this.memory.role){
             role[this.memory.role].work(this)
         }
+        if(this.ticksToLive == 1) {
+            this.room.memory.staff[this.memory.role] -= 1
+        }
     }
 
     public receiveTask(taskType){
@@ -91,6 +94,8 @@ let extendCreepProperties = () => {
             set: function(target: Structure) {
                 if(target){
                     this.memory.targetId = target.id;
+                }else{
+                    this.memory.targetId = undefined;
                 }
                 return OK
             },

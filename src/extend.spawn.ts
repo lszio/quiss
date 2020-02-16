@@ -25,9 +25,6 @@ class SpawnExtension extends Spawn {
     }
 
     newTask(role, name=undefined, level=undefined) {
-        if(this.store){
-
-        }
         if(!name){
             name = role + Game.time%1000
         }
@@ -38,13 +35,16 @@ class SpawnExtension extends Spawn {
             name: name,
             level: level,
             memory:{
-                role: role,  
+                role: role,
+                working: false,
+                charging: false 
             }
         }
         if(!this.memory.tasks){
             this.memory.tasks = new Array()
         }
         this.memory.tasks.push(spawnTask)
+        this.room.memory.staff[role] += 1
     }
 }
 

@@ -7,30 +7,33 @@ export default function () {
 
 class RoomExtension extends Room {
     work() {
-        // TODO Finish function work() os room
+        // TODO Finish function work of room
         if(Game.time%10 === 0){
-            this.scan()
+            this.check()
             return
         }
-        // // harvest
-        // if (this.memory.tasks["harvest"].length > this.memory.staff["harvester"].length){
-        //     Game.spawns.Spawn1.newTask("harvester")
-        //     console.log("Need more harvester")
-        // }
-        // // charge
-        // if(this.memory.tasks["charge"].length > this.memory.staff["charger"].length){
-        //     Game.spawns.Spawn1.newTask("charger")
-        //     console.log("Need more charger")
-        // }
+        // harvest
+        if (this.memory.tasks["harvest"].length*3 > this.memory.staff["harvester"]){
+            Game.spawns.Spawn1.newTask("harvester")
+        }
+        // charge
+        if(this.memory.tasks["charge"].length/5 > this.memory.staff["charger"]){
+            Game.spawns.Spawn1.newTask("charger")
+        }
     }
-    scan() {
-        // TODO Finish function scan() of room
-        console.log("[New room scan]: Room "+this.name)
+    check() {
+        // TODO Finish function check() of room
         if(!this.memory.tasks) {
             this.memory.tasks = {"harvest":[], "charge":[]};
         }
         if(!this.memory.staff) {
-            this.memory.staff = {"harvester":[],"charger":[]};
+            this.memory.staff = {"harvester":0,"charger":0};
+        }
+        if(Game.spawns.Spawn1.memory.tasks.length == 0) {
+            this.memory.staff = {"harvester":0,"charger":0};
+            for(const name in Game.creeps){
+                this.memory.staff[Game.creeps[name].memory.role] += 1
+            }
         }
         // harvest
         let targets = this.find(FIND_STRUCTURES, {
@@ -113,9 +116,6 @@ let extendRoomProperties = () => {
             },
             enumerable: false,
             configurable: true
-        },
-        'tasks': {
-            
         }
     });
 }

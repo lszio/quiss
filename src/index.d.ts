@@ -20,7 +20,7 @@ interface RoomTask {
 }
 
 interface RoomStaff {
-    [role:string]:string[]
+    [role:string]:number
 }
 // Creep interface
 interface CreepStatus {
@@ -30,7 +30,6 @@ interface CreepStatus {
 
 interface Creep {
     role: string
-    working: boolean
     source: Source
     target: Structure
     charge(target: Structure)
@@ -39,6 +38,7 @@ interface Creep {
 
 interface CreepMemory {
     role?: string
+    charging?: boolean
     working?: boolean
     sourceId?: string
     targetId?: string
