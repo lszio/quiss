@@ -10,9 +10,9 @@ class CreepExtension extends Creep {
     private _role: string;
 
     public work() {
+        if(this.spawning) return;
         if(this.memory.role){
             role[this.memory.role].work(this)
-            console.log("test")
         }
     }
 
