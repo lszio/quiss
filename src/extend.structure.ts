@@ -1,5 +1,5 @@
 export default function () {
-    extendTowerProperties()
+    extendStructureProperties()
     _.assign(StructureTower.prototype, TowerExtension.prototype)
 }
 
@@ -19,8 +19,21 @@ class TowerExtension extends StructureTower {
 
 }
 
-let extendTowerProperties = () => {
-    Object.defineProperties(StructureTower.prototype, {
-
+let extendStructureProperties = () => {
+    Object.defineProperties(Structure.prototype, {
+        'workers': {
+            // TODO Improve property workers of Structure
+            get: function() {
+                if(!this.memory.workers){
+                    this.memory.workers = 0
+                }
+                return this.memory.workers
+            },
+            set: function(newValue) {
+                this.memory.workers = newValue
+            },
+            enumerable: false,
+            configurable: true
+        }
     });
 }

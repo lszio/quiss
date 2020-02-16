@@ -50,15 +50,15 @@ module.exports = function(grunt) {
         },
         'watch': {
             default: {
-                files: "src/main.ts",
+                files: "src/*.ts",
                 tasks: ['clean', "ts", "screeps"]
             },
             local: {
-                files: "src/main.ts",
+                files: "src/*.ts",
                 tasks: ['clean', "ts", "copy:local"]
             },
             server: {
-                files: "src/main.ts",
+                files: "src/*.ts",
                 tasks: ['clean', "ts", "copy:server"]
             }
         }

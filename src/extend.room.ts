@@ -1,10 +1,64 @@
+import { runInThisContext } from "vm";
+
 export default function () {
     extendRoomProperties()
     _.assign(Room.prototype, RoomExtension.prototype)
 }
 
 class RoomExtension extends Room {
-
+    work() {
+        // TODO Finish function work() os room
+        if(Game.time%10 === 0){
+            this.scan()
+            return
+        }
+        // // harvest
+        // if (this.memory.tasks["harvest"].length > this.memory.staff["harvester"].length){
+        //     Game.spawns.Spawn1.newTask("harvester")
+        //     console.log("Need more harvester")
+        // }
+        // // charge
+        // if(this.memory.tasks["charge"].length > this.memory.staff["charger"].length){
+        //     Game.spawns.Spawn1.newTask("charger")
+        //     console.log("Need more charger")
+        // }
+    }
+    scan() {
+        // TODO Finish function scan() of room
+        console.log("[New room scan]: Room "+this.name)
+        if(!this.memory.tasks) {
+            this.memory.tasks = {"harvest":[], "charge":[]};
+        }
+        if(!this.memory.staff) {
+            this.memory.staff = {"harvester":[],"charger":[]};
+        }
+        // harvest
+        let targets = this.find(FIND_STRUCTURES, {
+            filter: (structure) => {
+                return structure.structureType == STRUCTURE_CONTAINER ||
+                    (
+                        structure.structureType == STRUCTURE_SPAWN ||
+                        structure.structureType == STRUCTURE_EXTENSION &&
+                        structure.room.controller.level <= 2
+                    ) &&
+                    structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0 
+            }
+        });
+        this.memory.tasks["harvest"] = targets.map(s=>s.id)
+        // charge
+        targets = this.find(FIND_STRUCTURES, {
+            filter: (structure) => {
+                return (
+                        structure.structureType == STRUCTURE_SPAWN ||
+                        structure.structureType == STRUCTURE_EXTENSION ||
+                        structure.structureType == STRUCTURE_TOWER ||
+                        structure.structureType == STRUCTURE_STORAGE
+                    ) &&
+                    structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0 
+            }
+        });
+        this.memory.tasks["charge"] = targets.map(s=>s.id)
+    }
 }
 
 let extendRoomProperties = () => {
@@ -59,6 +113,9 @@ let extendRoomProperties = () => {
             },
             enumerable: false,
             configurable: true
+        },
+        'tasks': {
+            
         }
     });
 }

@@ -10,9 +10,20 @@ interface Room {
     factory: StructureFactory
 }
 
+interface RoomMemory {
+    tasks: RoomTask,
+    staff: RoomStaff,
+}
+
+interface RoomTask {
+    [taskType: string]: string[],
+}
+
+interface RoomStaff {
+    [role:string]:string[]
+}
 // Creep interface
 interface CreepStatus {
-    unborn: boolean
     working: boolean
     workless: boolean
 }
@@ -48,14 +59,10 @@ interface BodyConfig {
     [HEAL]?: number
 }
 
-interface StaffConfig {
-    
-}
-
 // Spawn interface
 interface StructureSpawn {
     work()
-    newTask(spawnTask: SpawnTask)
+    newTask(role:string, name?:string, level?:number)
 }
 
 interface SpawnTask {
@@ -69,4 +76,24 @@ interface SpawnMemory {
 }
 
 interface SpawnOptions {
+}
+
+interface Mode {
+    develop: boolean
+    defence: boolean
+    attack: boolean
+}
+
+// Memory
+interface Memory {
+    mode: Mode
+}
+
+// Structure
+interface Structure {
+    workers: number
+}
+
+interface StructureMemory {
+    workers: number
 }

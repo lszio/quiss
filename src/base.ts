@@ -1,23 +1,7 @@
 
 export default function() {
     if(!Game.creeps['Tester']){
-        let task = {
-            name: "Tester",
-            level: 2,
-            memory: {
-                role: "harvester",
-            }
-        }
-        Game.spawns['Spawn1'].newTask(task)
-    }else{
-        let tester = Game.creeps['Tester']
-        if(!tester.memory.sourceId){
-            tester.source = tester.room.sources[0]
-        }
-        if(!tester.memory.targetId){
-            tester.target = tester.room.storage
-        }
-        tester.work()
+        Game.spawns['Spawn1'].newTask("charger","Tester")
     }
     
     let sources = Game.spawns['Spawn1'].room.find(FIND_SOURCES);
@@ -48,6 +32,7 @@ export default function() {
             }
         }
     }
+
     if(!Game.creeps['Upgrader']){
         Game.spawns['Spawn1'].spawnCreep([MOVE,WORK,CARRY],'Upgrader')
     }else{

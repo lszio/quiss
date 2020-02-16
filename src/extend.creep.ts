@@ -10,13 +10,40 @@ class CreepExtension extends Creep {
     private _role: string;
 
     public work() {
+        // TODO Finish function work of Creep
         if(this.spawning) return;
         if(this.memory.role){
             role[this.memory.role].work(this)
         }
     }
 
-    public charge(target=undefined) {
+    public receiveTask(taskType){
+        // TODO Finish function receiveTask of Creep
+        
+    }
+
+    public getEnerge(source=undefined) {
+        // TODO improve function getEnerge of Creep
+        if(!source){
+            if(!this.room.storage){
+                if(this.harvest(this.room.sources[0]) == ERR_NOT_IN_RANGE){
+                    this.moveTo(this.room.sources[0])
+                    return OK
+                }
+            }else{
+                source=this.room.storage
+            }
+        }
+        if(this.store.getFreeCapacity() > 0){
+            if(this.withdraw(source, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                this.moveTo(source)
+            }
+            return OK
+        }
+        return ERR_FULL
+    }
+
+    public charge(target?:Structure) {
         if(this.store.getFreeCapacity() > 0){
             if(!target){
                 if(!this.room.storage){
@@ -41,7 +68,7 @@ class CreepExtension extends Creep {
 let extendCreepProperties = () => {
     Object.defineProperties(Creep.prototype,{
         'source': {
-            get: function() {
+            get: function(): Source | undefined {
                 if(!this.memory.sourceId){
                     return undefined;
                 }
@@ -56,10 +83,15 @@ let extendCreepProperties = () => {
         },
         'target': {
             get: function() {
+                if(!this.memory.targetId){
+                    return undefined;
+                }
                 return Game.getObjectById(this.memory.targetId);
             },
             set: function(target: Structure) {
-                this.memory.targetId = target.id;
+                if(target){
+                    this.memory.targetId = target.id;
+                }
                 return OK
             },
             enumerable: false,

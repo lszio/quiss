@@ -19,14 +19,32 @@ class SpawnExtension extends Spawn {
         if(spawnResult == OK ){
             this.memory.tasks.shift()
             return OK
+        }else if(spawnResult = ERR_NOT_ENOUGH_ENERGY){
+            this.memory.tasks[0].level = 1
         }
     }
 
-    newTask(spawnTask) {
+    newTask(role, name=undefined, level=undefined) {
+        if(this.store){
+
+        }
+        if(!name){
+            name = role + Game.time%1000
+        }
+        if(!level){
+            level = this.room.controller.level
+        }
+        let spawnTask = {
+            name: name,
+            level: level,
+            memory:{
+                role: role,  
+            }
+        }
         if(!this.memory.tasks){
             this.memory.tasks = new Array()
-            this.memory.tasks.push(spawnTask)
         }
+        this.memory.tasks.push(spawnTask)
     }
 }
 
