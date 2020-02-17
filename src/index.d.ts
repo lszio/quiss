@@ -19,6 +19,12 @@ interface RoomTask {
     [taskType: string]: string[],
 }
 
+interface RoomTaskItem {
+    id: string,
+    need: number,
+    resource?: string
+}
+
 interface RoomStaff {
     [role:string]:number
 }
@@ -86,7 +92,8 @@ interface Mode {
 
 // Memory
 interface Memory {
-    mode: Mode
+    mode: Mode,
+    structures: Object
 }
 
 // Structure

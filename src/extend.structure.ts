@@ -30,7 +30,28 @@ let extendStructureProperties = () => {
                 return this.memory.workers
             },
             set: function(newValue) {
+                // let oldValue = this.memory.workers
                 this.memory.workers = newValue
+            },
+            enumerable: false,
+            configurable: true
+        },
+        'memory': {
+            get: function() {
+                if(!this.memory) {
+                    if(!Memory.structures){
+                        Memory.structures = {}
+                    }
+                    if(!Memory.structures[this.id]){
+                        Memory.structures[this.id] = {}
+                    }
+                    this.memory = Memory.structures[this.id]
+                }
+                return this.memory
+            },
+            set: function (newValue: Object) {
+                let oldValue = this.memory
+                this.memory = {...oldValue, newValue}
             },
             enumerable: false,
             configurable: true

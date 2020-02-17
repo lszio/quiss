@@ -13,7 +13,7 @@ class RoomExtension extends Room {
             return
         }
         // harvest
-        if (this.memory.tasks["harvest"].length*3 > this.memory.staff["harvester"]){
+        if (this.memory.tasks["harvest"].length*2 > this.memory.staff["harvester"]){
             Game.spawns.Spawn1.newTask("harvester")
         }
         // charge

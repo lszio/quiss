@@ -7,6 +7,7 @@ export default function () {
 
 class SpawnExtension extends Spawn {
     work() {
+        // TODO Improve function work of Spawn
         if(this.spawning){
             return ERR_BUSY
         }
@@ -24,7 +25,7 @@ class SpawnExtension extends Spawn {
         }
     }
 
-    newTask(role, name=undefined, level=undefined) {
+    newTask(role, name=undefined, level=undefined, memory?:Object) {
         if(!name){
             name = role + Game.time%1000
         }
@@ -37,7 +38,8 @@ class SpawnExtension extends Spawn {
             memory:{
                 role: role,
                 working: false,
-                charging: false 
+                charging: false,
+                ...memory
             }
         }
         if(!this.memory.tasks){
