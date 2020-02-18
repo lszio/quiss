@@ -25,28 +25,24 @@ class SpawnExtension extends Spawn {
         }
     }
 
-    newTask(role, name=undefined, level=undefined, memory?:Object) {
+    newTask(role, name?, memory?:Object) {
         if(!name){
-            name = role + Game.time%1000
+            name = this.room.name + role + this.room.memory.staff[role] + 1
         }
-        if(!level){
-            level = this.room.controller.level
-        }
+        let level = this.room.controller.level
         let spawnTask = {
             name: name,
             level: level,
+            active: true,
             memory:{
                 role: role,
-                working: false,
-                charging: false,
                 ...memory
             }
         }
         if(!this.memory.tasks){
-            this.memory.tasks = new Array()
+            this.memory.tasks = []
         }
         this.memory.tasks.push(spawnTask)
-        this.room.memory.staff[role] += 1
     }
 }
 

@@ -6,40 +6,49 @@ export default function() {
 }
 
 class CreepExtension extends Creep {
-    private _working: boolean;
-    private _role: string;
 
     public work() {
         // TODO Finish function work of Creep
-        if(this.spawning) return;
-        if(this.memory.role){
-            role[this.memory.role].work(this)
+        if(this.spawning) {
+            if(!this.memory.value){
+                this.memory.value = this.ticksToLive / 30 * this.store.getCapacity()
+            }
         }
+        if(this.memory.role){
+            role[this.memory.role](this)
+        }
+        this.room.staff[this.role].alive += 1
         if(this.ticksToLive == 1) {
-            this.room.memory.staff[this.memory.role] -= 1
+            if(this.memory.active) {
+                this.room.spawn.newTask(this.role, this.name, this.memory)
+            }
         }
     }
 
-    public receiveTask(taskType){
+    public getTask(taskType:string, structureId: string){
         // TODO Finish function receiveTask of Creep
         
     }
 
-    public getEnerge(source=undefined) {
+    public getEnerge(source?:Source | Structure) {
         // TODO improve function getEnerge of Creep
         if(!source){
             if(!this.room.storage){
+                let source = this.room.sources[0]
+            }else{
+                let source=this.room.storage
+            }
+        }
+        if(this.store.getFreeCapacity() > 0){
+            if(source instanceof Source) {
                 if(this.harvest(this.room.sources[0]) == ERR_NOT_IN_RANGE){
                     this.moveTo(this.room.sources[0])
                     return OK
                 }
-            }else{
-                source=this.room.storage
-            }
-        }
-        if(this.store.getFreeCapacity() > 0){
-            if(this.withdraw(source, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
-                this.moveTo(source)
+            }else {
+                if(this.withdraw(source, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                    this.moveTo(source)
+                }
             }
             return OK
         }

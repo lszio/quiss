@@ -7,12 +7,32 @@ declare module NodeJS {
 interface Room {
     sources: Source[],
     tower: StructureTower,
-    factory: StructureFactory
+    factory: StructureFactory,
+    spawn: StructureSpawn,
+    staff: RoomStaff,
+    tasks: RoomTask,
+    demand: RoomDemand
 }
 
 interface RoomMemory {
     tasks: RoomTask,
     staff: RoomStaff,
+    ticketToCheck: number,
+    status: RoomStatus,
+    spawn: string, structureId,
+    demand: RoomDemand
+}
+
+interface RoomStatus {
+    developing: boolean,
+    building: boolean,
+    upgrading: boolean,
+    attacking: boolean,
+    defending: boolean
+}
+
+interface RoomDemand {
+    [roleType: string]: number
 }
 
 interface RoomTask {
@@ -26,13 +46,12 @@ interface RoomTaskItem {
 }
 
 interface RoomStaff {
-    [role:string]:number
+    [role:string]: {
+        active: number,
+        alive: number
+    }
 }
 // Creep interface
-interface CreepStatus {
-    working: boolean
-    workless: boolean
-}
 
 interface Creep {
     role: string
@@ -48,6 +67,8 @@ interface CreepMemory {
     working?: boolean
     sourceId?: string
     targetId?: string
+    value?: number
+    active?: boolean
 }
 interface RoleConfig {
     work?: (creep: Creep) => any
@@ -68,7 +89,7 @@ interface BodyConfig {
 // Spawn interface
 interface StructureSpawn {
     work()
-    newTask(role:string, name?:string, level?:number)
+    newTask(role:string, name?:string, memory?:object)
 }
 
 interface SpawnTask {
@@ -93,12 +114,17 @@ interface Mode {
 // Memory
 interface Memory {
     mode: Mode,
-    structures: Object
+    structures: Object,
+    brain: Object
 }
 
 // Structure
 interface Structure {
-    workers: number
+    workers: number,
+    store?: any
+    _work()
+    check()
+    work()
 }
 
 interface StructureMemory {

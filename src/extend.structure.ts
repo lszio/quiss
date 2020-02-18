@@ -1,10 +1,35 @@
 export default function () {
     extendStructureProperties()
     _.assign(StructureTower.prototype, TowerExtension.prototype)
+    _.assign(Structure.prototype, StructureExtension.prototype)
+}
+
+class StructureExtension extends Structure {
+    work() {
+        if(this._work) {
+            this._work()
+        }
+        this.check()
+    }
+
+    check() {
+        if(this.store) {
+            if(this.store.getFreeCapacity() > 0){
+                this.room.memory.demand["charger"] += this.store.getFreeCapacity() / this.store.getCapacity() * 100
+            }else{
+                this.room.memory.demand["charger"] -= 1
+            }
+        }
+        // if(this.hits < this.hitsMax){
+        //     this.room.memory["repairer"] += 1
+        // }else{
+        //     this.room.memory["repairer"] -= 1
+        // }
+    }
 }
 
 class TowerExtension extends StructureTower {
-    work() {
+    _work() {
         // repaire
         let targets = this.room.find(FIND_STRUCTURES, {
             filter : (structure) => {
@@ -16,7 +41,6 @@ class TowerExtension extends StructureTower {
         })
         this.repair(targets[0])
     }
-
 }
 
 let extendStructureProperties = () => {

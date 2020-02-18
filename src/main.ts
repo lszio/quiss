@@ -7,6 +7,6 @@ module.exports.loop = function(): void {
     base()
     doWork(Game.rooms)
     doWork(Game.spawns)
-    doWork(Game.creeps)
+    // doWork(Game.creeps)
     doWork(Game.structures)
 }
