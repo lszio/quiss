@@ -33,7 +33,7 @@ export default {
         return OK
     },
     charger: function(creep) {
-        if(creep.target == undefined) {
+        if(!creep.memory.working) {
             let targets = creep.room.find(FIND_STRUCTURES, {
                 filter: (structure) => {
                     return (structure.structureType == STRUCTURE_TOWER ||
@@ -48,7 +48,7 @@ export default {
                 return
             }
             creep.target = targets[0]
-            // creep.target.workers = creep.target.workers + 1
+            creep.memory.working=true;
             creep.source = creep.target.pos.findClosestByRange(FIND_STRUCTURES,{
                     filter: (s) => {
                         return s.structureType == STRUCTURE_CONTAINER
@@ -64,8 +64,7 @@ export default {
                 if( result == ERR_NOT_IN_RANGE){
                     creep.moveTo(creep.target)
                 }else if( result == ERR_FULL){
-                    // creep.target.workers = creep.target.workers - 1
-                    creep.target = undefined;
+                    creep.memory.working=false;
                 }
             }
         }

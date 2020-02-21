@@ -88,6 +88,7 @@ interface BodyConfig {
 
 // Spawn interface
 interface StructureSpawn {
+    tasks: SpawnTask[]
     work()
     newTask(role:string, name?:string, memory?:object)
 }
@@ -116,6 +117,7 @@ interface Memory {
     mode: Mode,
     structures: Object,
     brain: Object
+    inited: boolean
 }
 
 // Structure

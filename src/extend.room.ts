@@ -1,3 +1,10 @@
+let staffConfig = {
+    "harvester": 2,
+    "charger": 2,
+    "builder": 2,
+    "upgrader": 3
+}
+
 const roleList = ["harvester","charger"]
 
 export default function () {
@@ -9,9 +16,9 @@ class RoomExtension extends Room {
     work() {
         // TODO Finish function work of room
         this.check()
-        for(const role of roleList){
-            this.staff[role].alive = 0
-        }
+        // for(const role of roleList){
+        //     this.staff[role].alive = 0
+        // }
     }
     check() {
         // TODO Finish function check of room
@@ -24,20 +31,35 @@ class RoomExtension extends Room {
         // Do check
         console.log("[Room "+this.name+"]: Regular check")
         let result = ""
-        for(const role of roleList){
-            if(this.staff[role].active > this.staff[role].alive) {
+        // for(const role of roleList){
+        //     if(this.staff[role].active > this.staff[role].alive) {
                 
+        //     }
+        //     if(this.demand[role] < -1000 || this.demand[role] > 1000){
+        //         this.demand[role] = 0
+        //     }
+        //     console.log("[Room "+this.name+"]: "+role+" active="+this.staff[role].active+", alive="+this.staff[role].alive)
+        //     console.log("[Room "+this.name+"]: "+role+" demand="+this.demand[role])
+        // }
+        // if(true) {
+        //     console.log(result)
+        // }
+        // Hard code for creep respawn
+        if(Game.spawns["Spawn1"].memory.tasks.length == 0){
+            console.log("Check creeps")
+            let staff = {
+                "harvester": 2,
+                "charger": 2,
+                "builder": 2,
+                "upgrader": 3
             }
-            if(this.demand[role] < -1000 || this.demand[role] > 1000){
-                this.demand[role] = 0
+            for(const name in Memory.creeps){
+                if(!Game.creeps[name] && Memory.creeps[name].active){
+                    this.spawn.newTask(Memory.creeps[name].role,name,Memory.creeps[name])
+                }
             }
-            console.log("[Room "+this.name+"]: "+role+" active="+this.staff[role].active+", alive="+this.staff[role].alive)
-            console.log("[Room "+this.name+"]: "+role+" demand="+this.demand[role])
         }
-        if(true) {
-            console.log(result)
-        }
-        
+
     }
     updateTask(taskType: string, structureId: string) {
         //TODO Finish function updateTask of room
@@ -53,15 +75,19 @@ let extendRoomProperties = () => {
     Object.defineProperties(Room.prototype, {
         'sources': {
             get: function() {
-                if (!this.memory.sourceIds) {
-                    const sources = this.find(FIND_SOURCES)
-                    if (sources.length <= 0) {
-                        console.log(`[${this.name} base] 异常访问，房间内没有找到 source`)
-                        return undefined
+                if(!this._sources){
+                    if (!this.memory.sourceIds) {
+                        console.log("[Room ]"+this.name+"]: Find sources")
+                        const sources = this.find(FIND_SOURCES)
+                        if (sources.length <= 0) {
+                            console.log(`[${this.name} base] 异常访问，房间内没有找到 source`)
+                            return undefined
+                        }
+                        this.memory.sourceIds = sources.map(s => s.id)
                     }
-                    this.memory.sourceIds = sources.map(s => s.id)
+                    this._sources = this.memory.sourceIds.map(id => Game.getObjectById(id))
                 }
-                return this.memory.sourceIds.map(id => Game.getObjectById(id))
+                return this._sources
             },
             enumerable: false,
             configurable: true
@@ -88,6 +114,7 @@ let extendRoomProperties = () => {
             get: function(){
                 if(!this._spawn) {
                     if(!this.memroy.spawnId) {
+                        console.log("[Room ]"+this.name+"]: Find spawn")
                         this.memroy.spawnId = this.room.find(FIND_STRUCTURES, {filter: (s)=>{return s.structureType === STRUCTURE_SPAWN}})[0].id
                         
                     }
@@ -127,7 +154,7 @@ let extendRoomProperties = () => {
                     if(!this.memory.staff) {
                         this.memory.staff = {}
                         for(const role of roleList) {
-                            this.memory.staff[role] = {active:0,alive:0}
+                            this.memory.staff[role] = 0
                         }
                     }
                     this._staff = this.memory.staff

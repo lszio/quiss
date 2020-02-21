@@ -11,9 +11,13 @@ class SpawnExtension extends Spawn {
         if(this.spawning){
             return ERR_BUSY
         }
-        if(!this.memory.tasks || this.memory.tasks.length === 0){
+        if(this.tasks.length === 0){
             return OK
         }
+        this.finishTask()
+    }
+
+    finishTask(){
         let task = this.memory.tasks[0]
         let body = (bodyConfigs[task.memory.role])[task.level]
         let spawnResult = this.spawnCreep(body, task.name, { memory: task.memory })
@@ -33,14 +37,11 @@ class SpawnExtension extends Spawn {
         let spawnTask = {
             name: name,
             level: level,
-            active: true,
             memory:{
                 role: role,
+                active: true,
                 ...memory
             }
-        }
-        if(!this.memory.tasks){
-            this.memory.tasks = []
         }
         this.memory.tasks.push(spawnTask)
     }
@@ -48,6 +49,15 @@ class SpawnExtension extends Spawn {
 
 let extendSpawnProperties = () => {
     Object.defineProperties(Spawn.prototype, {
-
+        "tasks": {
+            get: function() {
+                if(!this.memory.tasks){
+                    this.memory.tasks = []
+                }
+                return this.memory.tasks
+            },
+            enumerable: false,
+            configurable: true
+        } 
     });
 }

@@ -1,4 +1,3 @@
-
 export default function() { 
     let sources = Game.spawns['Spawn1'].room.find(FIND_SOURCES);
     if(!Game.creeps['Harvester']) {
