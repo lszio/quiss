@@ -18,15 +18,16 @@ class CreepExtension extends Creep {
         if(this.memory.role){
             role[this.memory.role](this)
         }
-        if(this.role){
-            this.room.staff[this.role].alive += 1
-        }
         
         if(this.ticksToLive == 1) {
             if(this.memory.active) {
                 this.room.spawn.newTask(this.role, this.name, this.memory)
             }
         }
+    }
+
+    public deactive(){
+        this.memory.active = false
     }
 
     public getTask(taskType:string, structureId: string){
@@ -82,7 +83,7 @@ class CreepExtension extends Creep {
 }
 
 let extendCreepProperties = () => {
-    Object.defineProperties(Creep.prototype,{
+    Object.defineProperties(Creep.prototype, {
         'source': {
             get: function(): Source | undefined {
                 if(!this.memory.sourceId){

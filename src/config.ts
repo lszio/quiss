@@ -1,5 +1,7 @@
+
+
 export const bodyConfigs = {
-    harvester: {
+    Harvester: {
         1: [ WORK, CARRY, MOVE ], 
         2: [ WORK, CARRY, MOVE, WORK, CARRY, MOVE ], 
         3: [ WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE ], 
@@ -9,7 +11,7 @@ export const bodyConfigs = {
         7: [ WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE ], 
         8: [ WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE ]
     },
-    charger: {
+    Charger: {
         1: [ WORK, CARRY, MOVE ], 
         2: [ WORK, CARRY, MOVE, WORK, CARRY, MOVE ], 
         3: [ WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE ], 

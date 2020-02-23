@@ -20,7 +20,7 @@ export function init(room: Room) {
         }
         for(const role in staffConfig){
                 if(room.staff[role]<staffConfig[role]){
-                    for(let i=0;i<=staffConfig[role];i++){
+                    for(let i=0;i<staffConfig[role];i++){
                         Game.spawns["Spawn1"].newTask("harvester")
                         console.log("new spawn task" + role)
                 }

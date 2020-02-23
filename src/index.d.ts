@@ -19,7 +19,7 @@ interface RoomMemory {
     staff: RoomStaff,
     ticketToCheck: number,
     status: RoomStatus,
-    spawn: string, structureId,
+    spawnId: string,
     demand: RoomDemand
 }
 
@@ -46,10 +46,7 @@ interface RoomTaskItem {
 }
 
 interface RoomStaff {
-    [role:string]: {
-        active: number,
-        alive: number
-    }
+    [role:string]: number
 }
 // Creep interface
 

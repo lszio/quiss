@@ -31,7 +31,7 @@ class SpawnExtension extends Spawn {
 
     newTask(role, name?, memory?:Object) {
         if(!name){
-            name = this.room.name + role + this.room.memory.staff[role] + 1
+            name = [this.room.name , role , ++this.room.staff[role]].join(".")
         }
         let level = this.room.controller.level
         let spawnTask = {

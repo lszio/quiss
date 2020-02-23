@@ -13,13 +13,13 @@ class StructureExtension extends Structure {
     }
 
     check() {
-        if(this.store) {
-            if(this.store.getFreeCapacity() > 0){
-                this.room.memory.demand["charger"] += this.store.getFreeCapacity() / this.store.getCapacity() * 100
-            }else{
-                this.room.memory.demand["charger"] -= 1
-            }
-        }
+        // if(this.store) {
+        //     if(this.store.getFreeCapacity() > 0){
+        //         this.room.memory.demand["charger"] += this.store.getFreeCapacity() / this.store.getCapacity() * 100
+        //     }else{
+        //         this.room.memory.demand["charger"] -= 1
+        //     }
+        // }
         // if(this.hits < this.hitsMax){
         //     this.room.memory["repairer"] += 1
         // }else{

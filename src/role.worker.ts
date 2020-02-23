@@ -1,5 +1,5 @@
 export default {
-    harvester: (creep: Creep) => {
+    "Harvester": (creep: Creep) => {
         if(!creep.memory.working){
             let targets = creep.room.find(FIND_STRUCTURES, {
                 filter: (structure) => {
@@ -32,7 +32,7 @@ export default {
         }
         return OK
     },
-    charger: function(creep) {
+    "Charger": function(creep) {
         if(!creep.memory.working) {
             let targets = creep.room.find(FIND_STRUCTURES, {
                 filter: (structure) => {
@@ -70,7 +70,15 @@ export default {
         }
         
     },
-    builder: (creep) => {
+    "Builder": (creep) => {
         return OK
+    },
+    "Upgrader": (creep) => {
+        if(!creep.working) {
+            creep.target = creep.room.controller
+            creep.working = true
+        }else{
+            
+        }
     }
 }
