@@ -37,22 +37,27 @@ class CreepExtension extends Creep {
 
     public getEnerge(source?:Source | Structure) {
         // TODO improve function getEnerge of Creep
-        if(!source){
-            if(!this.room.storage){
-                let source = this.room.sources[0]
+        if(!this.source){
+            if(!source){
+                if(!this.room.storage){
+                    this.source = this.room.sources[0]
+                }else{
+                    this.source = this.room.storage
+                }
             }else{
-                let source=this.room.storage
+                this.source = source
             }
         }
+
         if(this.store.getFreeCapacity() > 0){
-            if(source instanceof Source) {
-                if(this.harvest(this.room.sources[0]) == ERR_NOT_IN_RANGE){
-                    this.moveTo(this.room.sources[0])
+            if(this.source instanceof Source) {
+                if(this.harvest(this.source) == ERR_NOT_IN_RANGE){
+                    this.moveTo(this.source)
                     return OK
                 }
             }else {
-                if(this.withdraw(source, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
-                    this.moveTo(source)
+                if(this.withdraw(this.source, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                    this.moveTo(this.source)
                 }
             }
             return OK

@@ -1,11 +1,4 @@
-let staffConfig = {
-    "Harvester": 2,
-    "Charger": 2,
-    "Builder": 2,
-    "Upgrader": 3
-}
-
-const roleList = ["Harvester","Charger"]
+import { roleTypes } from './config'
 
 export default function () {
     extendRoomProperties()
@@ -26,21 +19,29 @@ class RoomExtension extends Room {
             return
         }
         // Do check
+        let temp = this.staff
         if(this.spawn.tasks.length == 0){
-            console.log("Check creeps")
-            let staff = {
-                "Harvester": 2,
-                "Charger": 2,
-                "Builder": 2,
-                "Upgrader": 3
+            for(const role of roleTypes){
+                this.staff[role] = 0
             }
             for(const name in Memory.creeps){
-                if(name.split('.')[0] == this.name && !Game.creeps[name] && Memory.creeps[name].active){
+                if(name.split('_')[0] == this.name && Memory.creeps[name].active){
+                    this.memory.staff[name.split('_')[1]] += 1
+                    if(!Game.creeps[name])
                     this.spawn.newTask(Memory.creeps[name].role,name,Memory.creeps[name])
                 }
             }
         }
-
+        // Check Demand
+        const chargeDemands = this.find(FIND_STRUCTURES, {filter: (s) => { 
+            return  (s.structureType == STRUCTURE_TOWER ||
+                    s.structureType == STRUCTURE_SPAWN ||
+                    s.structureType == STRUCTURE_EXTENSION) && 
+                    s.store.getFreeCapacity(RESOURCE_ENERGY) > 0
+        }})
+        if(chargeDemands.length > 0 && chargeDemands.length/this.memory.staff["Charger"] < 3){
+            this.moreStaff["Charger"]
+        }
     }
 
     moreStaff(role: string){
@@ -60,6 +61,9 @@ class RoomExtension extends Room {
     assignTask(taskType: string, creepName: string) {
         //TODO Finish function assignTask of room
 
+    }
+    cleanDemands(){
+        this.demand = undefined;
     }
 }
 
@@ -123,12 +127,9 @@ let extendRoomProperties = () => {
             get: function() {
                 if(!this._tasks){
                     if(!this.memory.tasks){
-                        this.memory.tasks = {
-                            "harvest": {},
-                            "charge": {},
-                            "upgrade": {},
-                            "repair": {},
-                            "build": {},
+                        this.memory.tasks = {}
+                        for(const role of roleTypes){
+                            this.memory.task[role] = {}
                         }
                     }
                     this._tasks = this.memory.tasks
@@ -147,7 +148,7 @@ let extendRoomProperties = () => {
                 if(!this._staff) {
                     if(!this.memory.staff) {
                         this.memory.staff = {}
-                        for(const role of roleList) {
+                        for(const role of roleTypes) {
                             this.memory.staff[role] = 0
                         }
                     }
@@ -167,7 +168,7 @@ let extendRoomProperties = () => {
                 if(!this._demand){
                     if(!this.memory.demand){
                         this.memory.demand = {}
-                        for(const role of roleList){
+                        for(const role of roleTypes){
                             this.memory.demand[role] = 0
                         }
                     }

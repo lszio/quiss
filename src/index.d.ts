@@ -52,7 +52,7 @@ interface RoomStaff {
 
 interface Creep {
     role: string
-    source: Source
+    source: Source | Structure
     target: Structure
     charge(target: Structure)
     work()
@@ -66,6 +66,7 @@ interface CreepMemory {
     targetId?: string
     value?: number
     active?: boolean
+    timeToChange?: number
 }
 interface RoleConfig {
     work?: (creep: Creep) => any

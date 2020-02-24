@@ -13,16 +13,16 @@ export function doWork(hashMap: object):void {
 export function init(room: Room) {
     if(!Memory.inited){
         let staffConfig = {
-            "harvester": 2,
-            "charger": 0,
-            "builder": 0,
-            "upgrader": 0,
+            "Harvester": 2,
+            "Charger": 2,
+            "Builder": 1,
+            "Upgrader": 2,
         }
         for(const role in staffConfig){
                 if(room.staff[role]<staffConfig[role]){
                     for(let i=0;i<staffConfig[role];i++){
-                        Game.spawns["Spawn1"].newTask("harvester")
-                        console.log("new spawn task" + role)
+                        Game.spawns["Spawn1"].newTask(role)
+                        console.log("New spawn task:" + role)
                 }
             }
         }

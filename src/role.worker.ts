@@ -54,6 +54,7 @@ export default {
                         return s.structureType == STRUCTURE_CONTAINER
                     }
                 })
+            creep.memory.timeToChange = 21
         }else{
             if(creep.store.getFreeCapacity() > 0){
                 if(creep.withdraw(creep.source, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
@@ -63,7 +64,7 @@ export default {
                 let result = creep.transfer(creep.target, RESOURCE_ENERGY)
                 if( result == ERR_NOT_IN_RANGE){
                     creep.moveTo(creep.target)
-                }else if( result == ERR_FULL){
+                }else if(creep.memory.timeToChange-- == 0 || result == ERR_FULL){
                     creep.memory.working=false;
                 }
             }
@@ -71,14 +72,41 @@ export default {
         
     },
     "Builder": (creep) => {
-        return OK
+        if(!creep.memory.working){
+            creep.getEnerge()
+            if(creep.store.getFreeCapacity == 0){
+                creep.target = creep.room.find((FIND_CONSTRUCTION_SITES))
+                creep.memory.working = true
+            }
+        }else {
+            const status = creep.build(creep.target)
+            if(status == ERR_NOT_IN_RANGE){
+                creep.moveTo(creep.target)
+            }else if(status == ERR_NOT_ENOUGH_ENERGY){
+                creep.working = false
+            }
+        }
     },
     "Upgrader": (creep) => {
-        if(!creep.working) {
-            creep.target = creep.room.controller
-            creep.working = true
+        if(!creep.memory.working) {
+            if(!creep.source) {
+                if(!creep.room.storage){
+                    creep.source = creep.room.sources[0]
+                }else{
+                    creep.source = creep.room.storage
+                }
+            }
+            creep.getEnerge(creep.source)
+            if(creep.store.getFreeCapacity(RESOURCE_ENERGY) == 0 ){
+                creep.memory.working = true
+            }
         }else{
-            
+            let status = creep.upgradeController(creep.room.controller)
+            if(status == ERR_NOT_IN_RANGE){
+                creep.moveTo(creep.room.controller)
+            }else if(status == ERR_NOT_ENOUGH_ENERGY){
+                creep.memory.working = false
+            }
         }
     }
 }

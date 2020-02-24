@@ -11,13 +11,13 @@ class SpawnExtension extends Spawn {
         if(this.spawning){
             return ERR_BUSY
         }
-        if(this.tasks.length === 0){
-            return OK
-        }
         this.finishTask()
     }
 
     finishTask(){
+        if(this.tasks.length === 0){
+            return OK
+        }
         let task = this.memory.tasks[0]
         let body = (bodyConfigs[task.memory.role])[task.level]
         let spawnResult = this.spawnCreep(body, task.name, { memory: task.memory })
@@ -31,7 +31,7 @@ class SpawnExtension extends Spawn {
 
     newTask(role, name?, memory?:Object) {
         if(!name){
-            name = [this.room.name , role , ++this.room.staff[role]].join(".")
+            name = [this.room.name , role , ++this.room.staff[role]].join("_")
         }
         let level = this.room.controller.level
         let spawnTask = {
