@@ -74,16 +74,16 @@ export default {
     "Builder": (creep) => {
         if(!creep.memory.working){
             creep.getEnerge()
-            if(creep.store.getFreeCapacity == 0){
-                creep.target = creep.room.find((FIND_CONSTRUCTION_SITES))
+            if(creep.store.getFreeCapacity(RESOURCE_ENERGY) == 0){
+                creep.target = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
                 creep.memory.working = true
             }
         }else {
             const status = creep.build(creep.target)
             if(status == ERR_NOT_IN_RANGE){
                 creep.moveTo(creep.target)
-            }else if(status == ERR_NOT_ENOUGH_ENERGY){
-                creep.working = false
+            }else if(status == ERR_NOT_ENOUGH_ENERGY || status == ERR_INVALID_TARGET){
+                creep.memory.working = false
             }
         }
     },
