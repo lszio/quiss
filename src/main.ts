@@ -1,4 +1,4 @@
-import base from './base'
+// import base from './base'
 import extend from './extend'
 import { doWork, init } from './utils'
 
@@ -6,11 +6,10 @@ module.exports.loop = function(): void {
     // load extensions
     extend()
     // base creeps
-    base()
+    // base()
     init(Game.spawns["Spawn1"].room)
-    // all units do work
+    // all units do it's work
     doWork(Game.rooms)
-    doWork(Game.spawns)
     doWork(Game.creeps)
     doWork(Game.structures)
 }

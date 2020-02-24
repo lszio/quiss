@@ -1,60 +1,59 @@
 export default function() { 
     let sources = Game.spawns['Spawn1'].room.find(FIND_SOURCES);
-    if(!Game.creeps['Harvester']) {
-        Game.spawns['Spawn1'].spawnCreep([MOVE,WORK,CARRY],'Harvester')
-    }else{
-        let harvester = Game.creeps['Harvester']
-        if(harvester.store.getFreeCapacity() > 0) {
-            if(harvester.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                harvester.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
-            }
-        }
-        else {
-            let targets = harvester.room.find(FIND_STRUCTURES, {
-                    filter: (structure) => {
-                        return (structure.structureType == STRUCTURE_SPAWN || 
-                                structure.structureType == STRUCTURE_CONTAINER || 
-                                structure.structureType == STRUCTURE_EXTENSION || 
-                                structure.structureType == STRUCTURE_TOWER ||
-                                structure.structureType == STRUCTURE_STORAGE ) &&
-                            structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
-                    }
-            });
-            if(targets.length > 0) {
-                if(harvester.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    harvester.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
-                }
-            }
-        }
-    }
+    // if(!Game.creeps['Harvester']) {
+    //     Game.spawns['Spawn1'].spawnCreep([MOVE,WORK,CARRY],'Harvester')
+    // }else{
+    //     let harvester = Game.creeps['Harvester']
+    //     if(harvester.store.getFreeCapacity() > 0) {
+    //         if(harvester.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
+    //             harvester.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+    //         }
+    //     }
+    //     else {
+    //         let targets = harvester.room.find(FIND_STRUCTURES, {
+    //                 filter: (structure) => {
+    //                     return (structure.structureType == STRUCTURE_SPAWN || 
+    //                             structure.structureType == STRUCTURE_CONTAINER || 
+    //                             structure.structureType == STRUCTURE_EXTENSION || 
+    //                             structure.structureType == STRUCTURE_TOWER ||
+    //                             structure.structureType == STRUCTURE_STORAGE ) &&
+    //                         structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+    //                 }
+    //         });
+    //         if(targets.length > 0) {
+    //             if(harvester.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+    //                 harvester.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
+    //             }
+    //         }
+    //     }
+    // }
+    // if(!Game.creeps['Upgrader']){
+    //     Game.spawns['Spawn1'].spawnCreep([MOVE,WORK,CARRY],'Upgrader')
+    // }else{
+    //     let upgrader = Game.creeps['Upgrader'];
+    //     if (!upgrader.memory.working) {
+    //         upgrader.memory.working = false;
+    //     }
+    //     if(upgrader.memory.working && upgrader.store[RESOURCE_ENERGY] == 0) {
+    //         upgrader.memory.working = false;
+    //         upgrader.say('🔄 harvest');
+    //     }
+    //     if(!upgrader.memory.working && upgrader.store.getFreeCapacity() == 0) {
+    //         upgrader.memory.working = true;
+    //         upgrader.say('⚡ upgrade');
+    //     }
 
-    if(!Game.creeps['Upgrader']){
-        Game.spawns['Spawn1'].spawnCreep([MOVE,WORK,CARRY],'Upgrader')
-    }else{
-        let upgrader = Game.creeps['Upgrader'];
-        if (!upgrader.memory.working) {
-            upgrader.memory.working = false;
-        }
-        if(upgrader.memory.working && upgrader.store[RESOURCE_ENERGY] == 0) {
-            upgrader.memory.working = false;
-            upgrader.say('🔄 harvest');
-        }
-        if(!upgrader.memory.working && upgrader.store.getFreeCapacity() == 0) {
-            upgrader.memory.working = true;
-            upgrader.say('⚡ upgrade');
-        }
-
-        if(upgrader.memory.working) {
-            if(upgrader.upgradeController(upgrader.room.controller) == ERR_NOT_IN_RANGE) {
-                upgrader.moveTo(upgrader.room.controller, {visualizePathStyle: {stroke: '#ffffff'}});
-            }
-        }
-        else {
-            if(upgrader.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                upgrader.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
-            }
-        }
-    }
+    //     if(upgrader.memory.working) {
+    //         if(upgrader.upgradeController(upgrader.room.controller) == ERR_NOT_IN_RANGE) {
+    //             upgrader.moveTo(upgrader.room.controller, {visualizePathStyle: {stroke: '#ffffff'}});
+    //         }
+    //     }
+    //     else {
+    //         if(upgrader.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
+    //             upgrader.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+    //         }
+    //     }
+    // }
     if(!Game.creeps['Builder']) {
         Game.spawns['Spawn1'].spawnCreep([MOVE,WORK,CARRY],'Builder')
     }else{
@@ -84,6 +83,7 @@ export default function() {
             builder.charge(builder.room.storage)
         }
     }
+    
     if(!Game.creeps['Repairer']) {
         Game.spawns['Spawn1'].spawnCreep([MOVE,WORK,CARRY],'Repairer')
     }else{
