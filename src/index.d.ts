@@ -55,6 +55,7 @@ interface Creep {
     source: Source | Structure
     target: Structure
     charge(target: Structure)
+    getEnerge()
     work()
 }
 

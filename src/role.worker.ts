@@ -49,17 +49,18 @@ export default {
             }
             creep.target = targets[0]
             creep.memory.working=true;
-            creep.source = creep.target.pos.findClosestByRange(FIND_STRUCTURES,{
-                    filter: (s) => {
-                        return s.structureType == STRUCTURE_CONTAINER
-                    }
-                })
+            // creep.source = creep.target.pos.findClosestByRange(FIND_STRUCTURES,{
+            //         filter: (s) => {
+            //             return s.structureType == STRUCTURE_CONTAINER && s.store.getUsedCapacity(RESOURCE_ENERGY) > 10
+            //         }
+            //     })
             creep.memory.timeToChange = 21
         }else{
             if(creep.store.getFreeCapacity() > 0){
-                if(creep.withdraw(creep.source, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(creep.source, {visualizePathStyle: {stroke: '#ffaa00'}});
-                }
+                // if(creep.withdraw(creep.source, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                //     creep.moveTo(creep.source, {visualizePathStyle: {stroke: '#ffaa00'}});
+                // }
+                creep.getEnergy("Container")
             }else{
                 let result = creep.transfer(creep.target, RESOURCE_ENERGY)
                 if( result == ERR_NOT_IN_RANGE){
@@ -73,7 +74,7 @@ export default {
     },
     "Builder": (creep) => {
         if(!creep.memory.working){
-            creep.getEnerge()
+            creep.getEnergy()
             if(creep.store.getFreeCapacity(RESOURCE_ENERGY) == 0){
                 creep.target = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
                 creep.memory.working = true
@@ -96,7 +97,7 @@ export default {
                     creep.source = creep.room.storage
                 }
             }
-            creep.getEnerge(creep.source)
+            creep.getEnergy("Storage")
             if(creep.store.getFreeCapacity(RESOURCE_ENERGY) == 0 ){
                 creep.memory.working = true
             }

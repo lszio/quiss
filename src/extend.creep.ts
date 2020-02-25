@@ -35,17 +35,21 @@ class CreepExtension extends Creep {
         
     }
 
-    public getEnerge(source?:Source | Structure) {
+    public getEnergy(prefer?:any) {
         // TODO improve function getEnerge of Creep
         if(!this.source){
-            if(!source){
-                if(!this.room.storage){
-                    this.source = this.room.sources[0]
-                }else{
-                    this.source = this.room.storage
-                }
-            }else{
-                this.source = source
+            if(prefer=="Storage"){
+                this.source = this.room.storage
+            }else if(prefer=="Container"){
+                this.source = this.pos.findClosestByRange(FIND_STRUCTURES, {
+                    filter: (s) => {
+                        return s.structureType == STRUCTURE_CONTAINER &&
+                            s.store.getUsedCapacity(RESOURCE_ENERGY) > 0
+                    }
+                })
+            }
+            if(!this.source){
+                this.source = this.room.sources[Game.time%this.room.sources.length]
             }
         }
 
@@ -56,8 +60,11 @@ class CreepExtension extends Creep {
                     return OK
                 }
             }else {
-                if(this.withdraw(this.source, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                const status = this.withdraw(this.source, RESOURCE_ENERGY)
+                if(status == ERR_NOT_IN_RANGE){
                     this.moveTo(this.source)
+                }else if(status == ERR_NOT_ENOUGH_RESOURCES){
+                    this.source = undefined
                 }
             }
             return OK
@@ -97,6 +104,9 @@ let extendCreepProperties = () => {
                 return Game.getObjectById(this.memory.sourceId);
             },
             set: function(source: Source | Mineral | Deposit | Structure) {
+                if(!source){
+                    return
+                }
                 this.memory.sourceId = source.id;
                 return OK
             },

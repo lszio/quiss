@@ -14,7 +14,7 @@ export function init(room: Room) {
     if(!Memory.inited){
         let staffConfig = {
             "Harvester": 2,
-            "Charger": 2,
+            "Charger": 3,
             "Builder": 1,
             "Upgrader": 2,
         }

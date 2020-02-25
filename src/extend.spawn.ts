@@ -26,6 +26,8 @@ class SpawnExtension extends Spawn {
             return OK
         }else if(spawnResult = ERR_NOT_ENOUGH_ENERGY){
             this.memory.tasks[0].level = 1
+        }else if(spawnResult = ERR_NAME_EXISTS){
+            this.memory.tasks.shift()
         }
     }
 
