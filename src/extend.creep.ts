@@ -55,9 +55,12 @@ class CreepExtension extends Creep {
 
         if(this.store.getFreeCapacity() > 0){
             if(this.source instanceof Source) {
-                if(this.harvest(this.source) == ERR_NOT_IN_RANGE){
+                const status = this.harvest(this.source)
+                if(status == ERR_NOT_IN_RANGE){
                     this.moveTo(this.source)
-                    return OK
+                }
+                if(this.store.getFreeCapacity(RESOURCE_ENERGY) == 0 && prefer != "Source"){
+                    this.source = undefined
                 }
             }else {
                 const status = this.withdraw(this.source, RESOURCE_ENERGY)
@@ -105,6 +108,7 @@ let extendCreepProperties = () => {
             },
             set: function(source: Source | Mineral | Deposit | Structure) {
                 if(!source){
+                    this.memory.sourceId = undefined;
                     return
                 }
                 this.memory.sourceId = source.id;

@@ -13,7 +13,7 @@ export function doWork(hashMap: object):void {
 export function init(room: Room) {
     if(!Memory.inited){
         let staffConfig = {
-            "Harvester": 2,
+            "Harvester": 4,
             "Charger": 3,
             "Builder": 1,
             "Upgrader": 2,
