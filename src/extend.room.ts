@@ -8,6 +8,9 @@ export default function () {
 class RoomExtension extends Room {
     work() {
         // TODO Finish function work of room
+        if(!this.memory.inited){
+            this.init()
+        }
         this.check()
     }
     check() {
@@ -70,30 +73,29 @@ class RoomExtension extends Room {
             for(const role in staffConfig){
                     if(this.staff[role]<staffConfig[role]){
                         for(let i=0;i<staffConfig[role];i++){
-                            Game.spawns["Spawn1"].newTask(role)
-                            console.log("New spawn task:" + role)
+                            this.spawn.newTask(role)
                     }
                 }
             }
-            Memory.inited = true
+            this.memory.inited = true
         }
     }
     clear() {
 
     }
-    clearTask() {
+    clearTasks() {
 
     }
-    clearCreep(){
+    clearCreeps(){
         
     }
     scan() {
 
     }
-    scanTask() {
-
+    scanTasks() {
+        
     }
-    scanCreep() {
+    scanCreeps() {
 
     }
 }

@@ -15,6 +15,7 @@ interface Room {
 }
 
 interface RoomMemory {
+    inited: boolean,
     tasks: RoomTask,
     staff: RoomStaff,
     ticketToCheck: number,
@@ -55,7 +56,7 @@ interface Creep {
     source: Source | Structure
     target: Structure
     charge(target: Structure)
-    getEnerge()
+    getEnergy(prefer: string)
     work()
 }
 

@@ -67,6 +67,10 @@ module.exports = function(grunt) {
             server: {
                 files: "src/*.ts",
                 tasks: ['clean', "ts", "copy:server"]
+            },
+            all: {
+                files: "src/*.ts",
+                tasks: ['clean', "ts", "copy:default", "copy:local", "copy:server"]
             }
         }
     })

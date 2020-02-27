@@ -49,8 +49,8 @@ export default function() {
             }
         }
         else {
-            if(upgrader.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                upgrader.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+            if(upgrader.harvest(sources[1]) == ERR_NOT_IN_RANGE) {
+                upgrader.moveTo(sources[1], {visualizePathStyle: {stroke: '#ffaa00'}});
             }
         }
     }
@@ -77,10 +77,7 @@ export default function() {
             }
         }
         else {
-            // if(builder.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-            //     builder.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
-            // }
-            builder.charge(builder.room.storage)
+            builder.getEnergy("Storage")
         }
     }
     
@@ -114,8 +111,8 @@ export default function() {
             }
         }
         else {
-            if(repairer.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                repairer.moveTo(sources[0], {visualizePathStyle: {stroke: '#ffaa00'}});
+            if(repairer.harvest(sources[1]) == ERR_NOT_IN_RANGE) {
+                repairer.moveTo(sources[1], {visualizePathStyle: {stroke: '#ffaa00'}});
             }
         }
     }

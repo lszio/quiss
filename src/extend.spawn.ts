@@ -15,18 +15,18 @@ class SpawnExtension extends Spawn {
     }
 
     finishTask(){
-        if(this.tasks.length === 0){
+        if(this.tasks.length == 0){
             return OK
         }
         let task = this.memory.tasks[0]
         let body = (bodyConfigs[task.memory.role])[task.level]
-        let spawnResult = this.spawnCreep(body, task.name, { memory: task.memory })
-        if(spawnResult == OK ){
+        let result = this.spawnCreep(body, task.name, { memory: task.memory })
+        if(result == OK ){
             this.memory.tasks.shift()
             return OK
-        }else if(spawnResult = ERR_NOT_ENOUGH_ENERGY){
+        }else if(result = ERR_NOT_ENOUGH_ENERGY){
             this.memory.tasks[0].level = 1
-        }else if(spawnResult = ERR_NAME_EXISTS){
+        }else if(result = ERR_NAME_EXISTS){
             this.memory.tasks.shift()
         }
     }

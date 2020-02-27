@@ -35,12 +35,18 @@ class CreepExtension extends Creep {
         
     }
 
-    public getEnergy(prefer?:any) {
-        // TODO improve function getEnerge of Creep
+    public getEnergy(prefer?:string) {
+        // TODO improve function getEnergy of Creep
         if(!this.source){
-            if(prefer=="Storage"){
-                this.source = this.room.storage
-            }else if(prefer=="Container"){
+            if(prefer=="Source"){
+                this.source = this.room.sources[Game.time%this.room.sources.length]
+            }
+            if(prefer=="Storage" && !this.source){
+                if(this.room.storage && this.room.storage.store.getUsedCapacity(RESOURCE_ENERGY) > 0){
+                    this.source = this.room.storage
+                }
+            }
+            if(prefer=="Container" && !this.source){
                 this.source = this.pos.findClosestByRange(FIND_STRUCTURES, {
                     filter: (s) => {
                         return s.structureType == STRUCTURE_CONTAINER &&
@@ -55,43 +61,22 @@ class CreepExtension extends Creep {
 
         if(this.store.getFreeCapacity() > 0){
             if(this.source instanceof Source) {
-                const status = this.harvest(this.source)
-                if(status == ERR_NOT_IN_RANGE){
+                const result = this.harvest(this.source)
+                if(result == ERR_NOT_IN_RANGE){
                     this.moveTo(this.source)
                 }
                 if(this.store.getFreeCapacity(RESOURCE_ENERGY) == 0 && prefer != "Source"){
                     this.source = undefined
                 }
-            }else {
-                const status = this.withdraw(this.source, RESOURCE_ENERGY)
-                if(status == ERR_NOT_IN_RANGE){
+            } else {
+                const result = this.withdraw(this.source, RESOURCE_ENERGY)
+                if(result == ERR_NOT_IN_RANGE){
                     this.moveTo(this.source)
-                }else if(status == ERR_NOT_ENOUGH_RESOURCES){
+                }else if(result == ERR_NOT_ENOUGH_RESOURCES){
                     this.source = undefined
                 }
             }
             return OK
-        }
-        return ERR_FULL
-    }
-
-    public charge(target?:Structure) {
-        if(this.store.getFreeCapacity() > 0){
-            if(!target){
-                if(!this.room.storage){
-                    if(this.harvest(this.room.sources[0]) == ERR_NOT_IN_RANGE){
-                        this.moveTo(this.room.sources[0])
-                        return OK
-                    }
-                }else{
-                    target=this.room.storage
-                }
-            }else{
-                if(this.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
-                    this.moveTo(target)
-                }
-                return OK
-            }
         }
         return ERR_FULL
     }
