@@ -1,4 +1,4 @@
-import { roleTypes } from './config'
+import { roleTypes, staffConfig } from './config'
 
 export default function () {
     extendRoomProperties()
@@ -62,8 +62,39 @@ class RoomExtension extends Room {
         //TODO Finish function assignTask of room
 
     }
-    cleanDemands(){
+    cleanDemands() {
         this.demand = undefined;
+    }
+    init() {
+        if(!Memory.inited){
+            for(const role in staffConfig){
+                    if(this.staff[role]<staffConfig[role]){
+                        for(let i=0;i<staffConfig[role];i++){
+                            Game.spawns["Spawn1"].newTask(role)
+                            console.log("New spawn task:" + role)
+                    }
+                }
+            }
+            Memory.inited = true
+        }
+    }
+    clear() {
+
+    }
+    clearTask() {
+
+    }
+    clearCreep(){
+        
+    }
+    scan() {
+
+    }
+    scanTask() {
+
+    }
+    scanCreep() {
+
     }
 }
 

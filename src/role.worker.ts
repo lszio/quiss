@@ -28,6 +28,8 @@ export default {
                 }else if( result == ERR_FULL){
                     creep.memory.working=false
                 }
+            }if(creep.target.structureType != STRUCTURE_CONTAINER){
+                creep.memory.working = false
             }
         }
         return OK
@@ -107,6 +109,23 @@ export default {
                 creep.moveTo(creep.room.controller)
             }else if(status == ERR_NOT_ENOUGH_ENERGY){
                 creep.memory.working = false
+            }
+        }
+    },
+    "Repairer": (creep) => {
+        if(!creep.memory.working){
+            creep.getEnergy("Storage")
+        }else{
+            let targets = creep.room.find(FIND_STRUCTURES, {
+                filter: (s) => { 
+                    return s.hitsMax > s.hits
+                }
+            })
+            targets.sort((b,a) => {
+                return ((a.hitsMax - a.hits)/ a.hitsMax) - ((b.hitsMax - b.hits) / b.hitsMax)
+            })
+            if(creep.repair(targets[0]) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
             }
         }
     }
