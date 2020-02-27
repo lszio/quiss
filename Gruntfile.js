@@ -1,4 +1,4 @@
-const { email, password, localPath, serverPath } = require('./private')
+const { email, password, defaultPath, localPath, serverPath } = require('./private')
 
 module.exports = function(grunt) {
     grunt.loadNpmTasks("grunt-ts")
@@ -33,6 +33,13 @@ module.exports = function(grunt) {
             build: [ 'dist/*' ]
         },
         'copy': {
+            default: {
+                expand: true,
+                cwd: 'dist',
+                src: '**',
+                dest: defaultPath,
+                filter: 'isFile'
+            },
             local: {
                 expand: true,
                 cwd: 'dist',
@@ -51,7 +58,7 @@ module.exports = function(grunt) {
         'watch': {
             default: {
                 files: "src/*.ts",
-                tasks: ['clean', "ts", "screeps"]
+                tasks: ['clean', "ts", "copy:default"]
             },
             local: {
                 files: "src/*.ts",
