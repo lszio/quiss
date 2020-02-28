@@ -48,13 +48,13 @@ class RoomExtension extends Room {
     }
 
     moreStaff(role: string){
-        let name = [this.name , role , ++this.staff[role]].join("_")
+        let name = [this.name , role , ++this.memory.staff[role]].join("_")
         this.spawn.newTask(role, name)
         return `[Room ${this.name}]: New staff ${name}`
     }
 
     lessStaff(role: string){
-        let name = [this.name , role , this.staff[role]--].join("_")
+        let name = [this.name , role , this.memory.staff[role]--].join("_")
         Game.creeps[name].memory.active = false
         return `[Room ${this.name}]: Staff ${name} retired`
     }
