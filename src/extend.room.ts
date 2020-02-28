@@ -75,7 +75,7 @@ class RoomExtension extends Room {
         this.spawn.tasks
         this.staff
         if(!this.memory.inited){
-            this.initStaff()
+            // this.initStaff()
             this.memory.inited = true
         }
         console.log("[Room " + this.name + "]: inited")
