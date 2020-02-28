@@ -130,5 +130,6 @@ interface Structure {
 }
 
 interface StructureMemory {
-    workers: number
+    workers: number,
+    tag: string
 }

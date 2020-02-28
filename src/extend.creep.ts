@@ -59,7 +59,7 @@ class CreepExtension extends Creep {
             }
         }
 
-        if(this.store.getFreeCapacity() > 0){
+        if(this.store.getFreeCapacity(RESOURCE_ENERGY) > 0){
             if(this.source instanceof Source) {
                 const result = this.harvest(this.source)
                 if(result == ERR_NOT_IN_RANGE){
