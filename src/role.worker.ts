@@ -113,7 +113,8 @@ export default {
             let result = creep.repair(targets[0])
             if(result == ERR_NOT_IN_RANGE) {
                 creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
-            }else if(result == ERR_INVALID_TARGET) {
+            }
+            if(result == ERR_INVALID_TARGET || creep.store.getUsedCapacity(RESOURCE_ENERGY) == 0) {
                 creep.memory.working = false
             }
         }

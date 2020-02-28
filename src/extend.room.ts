@@ -48,13 +48,15 @@ class RoomExtension extends Room {
     }
 
     moreStaff(role: string){
-        let name = [this.name , role , ++this.staff[role]].join(".")
+        let name = [this.name , role , ++this.staff[role]].join("_")
         this.spawn.newTask(role, name)
+        return `[Room ${this.name}]: New staff ${name}`
     }
 
     lessStaff(role: string){
-        let name = [this.name , role , this.staff[role]--].join(".")
+        let name = [this.name , role , this.staff[role]--].join("_")
         Game.creeps[name].memory.active = false
+        return `[Room ${this.name}]: Staff ${name} retired`
     }
 
     updateTask(taskType: string, structureId: string) {
@@ -69,19 +71,36 @@ class RoomExtension extends Room {
         this.demand = undefined;
     }
     init() {
-        if(!Memory.inited){
-            for(const role in staffConfig){
-                    if(this.staff[role]<staffConfig[role]){
-                        for(let i=0;i<staffConfig[role];i++){
-                            this.spawn.newTask(role)
-                    }
+        this.clear()
+        this.spawn.tasks
+        this.staff
+        if(!this.memory.inited){
+            this.initStaff()
+            this.memory.inited = true
+        }
+        console.log("[Room " + this.name + "]: inited")
+        return OK
+    }
+    initStaff() {
+        for(const role in staffConfig){
+            if(this.staff[role]<staffConfig[role]){
+                for(let i=0;i<staffConfig[role];i++){
+                    this.moreStaff(role)
                 }
             }
-            this.memory.inited = true
         }
     }
     clear() {
-
+        for(const name in Game.creeps){
+            if (Game.creeps[name].room.name == name.split("_")[0]){
+                Game.creeps[name].memory = undefined
+                Game.creeps[name].suicide()
+            }
+        }
+        this.spawn.memory = undefined
+        this.memory = undefined
+        console.log("[Room " + this.name + "]: cleared")
+        return OK
     }
     clearTasks() {
 
@@ -106,10 +125,10 @@ let extendRoomProperties = () => {
             get: function() {
                 if(!this._sources){
                     if (!this.memory.sourceIds) {
-                        console.log("[Room ]"+this.name+"]: Find sources")
+                        console.log("[Room "+this.name+"]: Find sources")
                         const sources = this.find(FIND_SOURCES)
                         if (sources.length <= 0) {
-                            console.log(`[${this.name} base] 异常访问，房间内没有找到 source`)
+                            console.log(`[Room ${this.name}]: 异常访问，房间内没有找到 source`)
                             return undefined
                         }
                         this.memory.sourceIds = sources.map(s => s.id)
@@ -127,7 +146,7 @@ let extendRoomProperties = () => {
                     if(!this.memory.factoryIds) {
                         const factorys = this.find(FIND_STRUCTURES, {filter: (s) => s.structureType === STRUCTURE_STORAGE})
                         if (factorys.length <= 0) {
-                            console.log(`[${this.name} base] 异常访问，房间内没有找到 factory`)
+                            console.log(`[Room ${this.name}]: 异常访问，房间内没有找到 factory`)
                             return undefined
                         }
                         this.memory.factoryIds = factorys.map(s => s.id)

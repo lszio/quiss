@@ -10,10 +10,10 @@ class CreepExtension extends Creep {
     public work() {
         // TODO Finish function work of Creep
         if(this.spawning) {
-            if(!this.memory.value){
-                this.memory.value = this.ticksToLive / 30 * this.store.getCapacity()
-            }
-            return
+            // if(!this.memory.value){
+            //     this.memory.value = this.ticksToLive / 30 * this.store.getCapacity()
+            // }
+            // return
         }
         if(this.memory.role){
             role[this.memory.role](this)

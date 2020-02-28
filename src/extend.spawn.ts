@@ -19,13 +19,16 @@ class SpawnExtension extends Spawn {
             return OK
         }
         let task = this.memory.tasks[0]
+        if(!task.memory.role){
+            task.memory.role = task.name.split("_")[1]
+        }
         let body = (bodyConfigs[task.memory.role])[task.level]
         let result = this.spawnCreep(body, task.name, { memory: task.memory })
         if(result == OK ){
             this.memory.tasks.shift()
             return OK
-        }else if(result = ERR_NOT_ENOUGH_ENERGY){
-            this.memory.tasks[0].level = 1
+        }else if((result = ERR_NOT_ENOUGH_ENERGY) && this.memory.tasks[0].level>1){
+            this.memory.tasks[0].level -= 1
         }else if(result = ERR_NAME_EXISTS){
             this.memory.tasks.shift()
         }
@@ -36,14 +39,17 @@ class SpawnExtension extends Spawn {
             name = [this.room.name , role , ++this.room.staff[role]].join("_")
         }
         let level = this.room.controller.level
+        let newMemory = {
+            "role": role,
+            "active": true,
+            "working": false
+        }
         let spawnTask = {
-            name: name,
-            level: level,
-            memory:{
-                ...memory,
-                role: role,
-                active: true,
-                working: false
+            "name": name,
+            "level": level,
+            "memory":{
+               ...memory,
+               ...newMemory
             }
         }
         this.memory.tasks.push(spawnTask)
