@@ -110,8 +110,11 @@ export default {
             targets.sort((b,a) => {
                 return ((a.hitsMax - a.hits)/ a.hitsMax) - ((b.hitsMax - b.hits) / b.hitsMax)
             })
-            if(creep.repair(targets[0]) == ERR_NOT_IN_RANGE) {
+            let result = creep.repair(targets[0])
+            if(result == ERR_NOT_IN_RANGE) {
                 creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
+            }else if(result == ERR_INVALID_TARGET) {
+                creep.memory.working = false
             }
         }
     }

@@ -79,6 +79,16 @@ let extendStructureProperties = () => {
             },
             enumerable: false,
             configurable: true
+        },
+        'tag': {
+            get: function() {
+                return this.memory.tag
+            },
+            set: function (newValue: string) {
+                this.memory.tag = newValue
+            },
+            enumerable: false,
+            configurable: true
         }
     });
 }

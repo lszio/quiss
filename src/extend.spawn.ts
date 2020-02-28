@@ -40,9 +40,10 @@ class SpawnExtension extends Spawn {
             name: name,
             level: level,
             memory:{
+                ...memory,
                 role: role,
                 active: true,
-                ...memory
+                working: false
             }
         }
         this.memory.tasks.push(spawnTask)
