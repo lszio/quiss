@@ -6,7 +6,7 @@ module.exports.loop = function(): void {
     // load extensions
     extend()
     // base creeps
-    base()
+    // base()
     // all units do it's work
     doWork(Game.rooms)
     doWork(Game.creeps)

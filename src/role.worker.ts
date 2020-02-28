@@ -16,7 +16,7 @@ export default {
                 creep.memory.working=true;
             }
         }else{
-            if(creep.store.getFreeCapacity() > 0){
+            if(creep.store.getFreeCapacity(RESOURCE_ENERGY) > 0){
                 creep.getEnergy("Source")
             }else{
                 let result = creep.transfer(creep.target, RESOURCE_ENERGY)
@@ -51,7 +51,7 @@ export default {
             creep.memory.working=true;
             creep.memory.timeToChange = 21
         }else{
-            if(creep.store.getFreeCapacity() > 0){           
+            if(creep.store.getFreeCapacity(RESOURCE_ENERGY) > 0){           
                 creep.getEnergy("Container")
             }else{
                 let result = creep.transfer(creep.target, RESOURCE_ENERGY)
