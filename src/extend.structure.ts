@@ -13,23 +13,21 @@ class StructureExtension extends Structure {
     }
 
     check() {
-        // if(this.store) {
-        //     if(this.store.getFreeCapacity() > 0){
-        //         this.room.memory.demand["charger"] += this.store.getFreeCapacity() / this.store.getCapacity() * 100
-        //     }else{
-        //         this.room.memory.demand["charger"] -= 1
-        //     }
-        // }
-        // if(this.hits < this.hitsMax){
-        //     this.room.memory["repairer"] += 1
-        // }else{
-        //     this.room.memory["repairer"] -= 1
-        // }
+        if(this.store && this.store.getFreeCapacity(RESOURCE_ENERGY) > 0) {
+            this.room.newTask("Harvester", this.id)
+        }
+        if(this.hits < this.hitsMax){
+            this.room.tasks
+        }
     }
 }
 
 class TowerExtension extends StructureTower {
     _work() {
+        // defence
+        let invaders = this.room.find(FIND_HOSTILE_CREEPS)
+        if(invaders && invaders.length > 0)
+        this.attack(invaders[0])
         // repaire
         let targets = this.room.find(FIND_STRUCTURES, {
             filter : (structure) => {

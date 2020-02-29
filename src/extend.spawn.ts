@@ -15,7 +15,7 @@ class SpawnExtension extends Spawn {
     }
 
     finishTask(){
-        if(this.tasks.length == 0){
+        if(!this.tasks || this.tasks.length == 0){
             return OK
         }
         let task = this.memory.tasks[0]
@@ -26,10 +26,12 @@ class SpawnExtension extends Spawn {
         let result = this.spawnCreep(body, task.name, { memory: task.memory })
         if(result == OK ){
             this.memory.tasks.shift()
+            console.log(`[Room ${this.room.name}]: ${task.name} spawned,level: ${task.level}`)
             return OK
         }else if((result = ERR_NOT_ENOUGH_ENERGY) && this.memory.tasks[0].level>1){
             this.memory.tasks[0].level -= 1
         }else if(result = ERR_NAME_EXISTS){
+            console.log(`[Room ${this.room.name}]: Already have ${task.name}`)
             this.memory.tasks.shift()
         }
     }

@@ -11,7 +11,9 @@ interface Room {
     spawn: StructureSpawn,
     staff: RoomStaff,
     tasks: RoomTask,
-    demand: RoomDemand
+    demand: RoomDemand,
+    newTask(role: string, id: string),
+    getTask(role: string)
 }
 
 interface RoomMemory {

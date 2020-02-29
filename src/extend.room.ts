@@ -12,6 +12,7 @@ class RoomExtension extends Room {
             this.init()
         }
         this.check()
+        this.clearTasks()
     }
     check() {
         // TODO Finish function check of room
@@ -22,28 +23,8 @@ class RoomExtension extends Room {
             return
         }
         // Do check
-        let temp = this.staff
-        if(this.spawn.tasks.length == 0){
-            for(const role of roleTypes){
-                this.staff[role] = 0
-            }
-            for(const name in Memory.creeps){
-                if(name.split('_')[0] == this.name && Memory.creeps[name].active){
-                    this.memory.staff[name.split('_')[1]] += 1
-                    if(!Game.creeps[name])
-                    this.spawn.newTask(Memory.creeps[name].role,name,Memory.creeps[name])
-                }
-            }
-        }
-        // Check Demand
-        const chargeDemands = this.find(FIND_STRUCTURES, {filter: (s) => { 
-            return  (s.structureType == STRUCTURE_TOWER ||
-                    s.structureType == STRUCTURE_SPAWN ||
-                    s.structureType == STRUCTURE_EXTENSION) && 
-                    s.store.getFreeCapacity(RESOURCE_ENERGY) > 0
-        }})
-        if(chargeDemands.length > 0 && chargeDemands.length/this.memory.staff["Charger"] < 3){
-            this.moreStaff["Charger"]
+        if(this.staff && this.spawn.tasks.length == 0 && Game.time%100 == 0){
+            this.scanStaff()
         }
     }
 
@@ -59,28 +40,18 @@ class RoomExtension extends Room {
         return `[Room ${this.name}]: Staff ${name} retired`
     }
 
-    updateTask(taskType: string, structureId: string) {
-        //TODO Finish function updateTask of room
-
-    }
-    assignTask(taskType: string, creepName: string) {
-        //TODO Finish function assignTask of room
-
-    }
-    cleanDemands() {
-        this.demand = undefined;
-    }
     init() {
         this.clear()
         this.spawn.tasks
         this.staff
         if(!this.memory.inited){
-            // this.initStaff()
+            this.initStaff()
             this.memory.inited = true
         }
         console.log("[Room " + this.name + "]: inited")
         return OK
     }
+
     initStaff() {
         for(const role in staffConfig){
             if(this.staff[role]<staffConfig[role]){
@@ -90,32 +61,63 @@ class RoomExtension extends Room {
             }
         }
     }
+
     clear() {
+        this.spawn.memory = undefined
+        this.memory = undefined
+        this.clearCreeps()
+        console.log("[Room " + this.name + "]: cleared")
+        return OK
+    }
+
+    clearTasks() {
+        this.memory.tasks = undefined
+        this.tasks
+    }
+
+    clearCreeps(){
         for(const name in Game.creeps){
             if (Game.creeps[name].room.name == name.split("_")[0]){
                 Game.creeps[name].memory = undefined
                 Game.creeps[name].suicide()
             }
         }
-        this.spawn.memory = undefined
-        this.memory = undefined
-        console.log("[Room " + this.name + "]: cleared")
-        return OK
     }
-    clearTasks() {
 
-    }
-    clearCreeps(){
-        
-    }
     scan() {
 
     }
-    scanTasks() {
-        
-    }
-    scanCreeps() {
 
+    scanStaff() {
+        if(this.spawn.tasks.length > 0){
+            return `[Room ${this.name}]: Spawn still have tasks`
+        }
+        this.memory.staff = undefined
+        this.staff
+        for(const name in Game.creeps){
+            if (Game.creeps[name].room.name == name.split("_")[0]){
+                let role = name.split("_")[1]
+                this.memory.staff[role] +=1
+            }
+        }
+        for(const role of roleTypes){
+            console.log(`[Room ${this.name}]: Staff ${role}: ${this.memory.staff[role]}`)
+        }
+        return OK
+    }
+
+    newTask(role: string,id: string) {
+        this.memory.tasks[role].push(id)
+    }
+
+    getTask(role: string){
+        if(!this.memory.tasks.sorted){
+            this.memory.tasks["Charger"]
+        }
+        if(this.memory.tasks[role].length == 0){
+            return
+        }
+        return Game.getObjectById(this.memory.tasks[role][0])
     }
 }
 
@@ -177,60 +179,39 @@ let extendRoomProperties = () => {
         },
         'tasks': {
             get: function() {
-                if(!this._tasks){
-                    if(!this.memory.tasks){
-                        this.memory.tasks = {}
-                        for(const role of roleTypes){
-                            this.memory.task[role] = {}
-                        }
+                if(!this.memory.tasks){
+                    this.memory.tasks = {}
+                    for(const role of roleTypes){
+                        this.memory.tasks[role] = []
                     }
-                    this._tasks = this.memory.tasks
                 }
-                return this._tasks;
-            },
-            set: function(newValue: object) {
-                let oldValue = this.memory.task
-                this.memory.tasks = {...oldValue, ...newValue}
+                return this.memory.tasks
             },
             enumerable: false,
             configurable: true
         },
         'staff': {
             get: function() {
-                if(!this._staff) {
                     if(!this.memory.staff) {
                         this.memory.staff = {}
                         for(const role of roleTypes) {
                             this.memory.staff[role] = 0
                         }
                     }
-                    this._staff = this.memory.staff
-                }
-                return this._staff
-            },
-            set: function(newValue: object) {
-                let oldValue = this.memory.staff
-                this.memory.staff = {...oldValue, ...newValue}
+                return this.memory.staff
             },
             enumerable: false,
             configurable: true
         },
         'demand': {
             get: function() {
-                if(!this._demand){
-                    if(!this.memory.demand){
-                        this.memory.demand = {}
-                        for(const role of roleTypes){
-                            this.memory.demand[role] = 0
-                        }
+                if(!this.memory.demand){
+                    this.memory.demand = {}
+                    for(const role of roleTypes){
+                        this.memory.demand[role] = 0
                     }
-                    this._demand = this.memory.demand
                 }
-                return this._demand
-            },
-            set: function(newValue: object) {
-                let oldValue = this.memory.demand
-                this.memory.demand = {...oldValue, ...newValue}
+                return this.memory.demand
             },
             enumerable: false,
             configurable: true
