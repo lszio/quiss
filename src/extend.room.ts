@@ -23,7 +23,7 @@ class RoomExtension extends Room {
             return
         }
         // Do check
-        if(this.staff && this.spawn.tasks.length == 0 && Game.time%100 == 0){
+        if(this.staff && this.spawn.tasks.length == 0 && Game.time%10 == 0){
             this.scanStaff()
         }
     }

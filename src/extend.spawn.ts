@@ -22,6 +22,13 @@ class SpawnExtension extends Spawn {
         if(!task.memory.role){
             task.memory.role = task.name.split("_")[1]
         }
+        if(Game.creeps[task.name]){
+            if(Game.creeps[task.name].ticksToLive > 10){
+                console.log(`[Room ${this.room.name}]: Already have ${task.name}`)
+                this.memory.tasks.shift()
+            }
+            return
+        }
         let body = (bodyConfigs[task.memory.role])[task.level]
         let result = this.spawnCreep(body, task.name, { memory: task.memory })
         if(result == OK ){
@@ -30,10 +37,11 @@ class SpawnExtension extends Spawn {
             return OK
         }else if((result = ERR_NOT_ENOUGH_ENERGY) && this.memory.tasks[0].level>1){
             this.memory.tasks[0].level -= 1
-        }else if(result = ERR_NAME_EXISTS){
-            console.log(`[Room ${this.room.name}]: Already have ${task.name}`)
-            this.memory.tasks.shift()
         }
+        // else if(result = ERR_NAME_EXISTS){
+        //     console.log(`[Room ${this.room.name}]: Already have ${task.name}`)
+        //     this.memory.tasks.shift()
+        // }
     }
 
     newTask(role, name?, memory?:Object) {
