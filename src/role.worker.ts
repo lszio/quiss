@@ -66,7 +66,7 @@ export default {
     },
     "Builder": (creep) => {
         if(!creep.memory.working){
-            creep.getEnergy()
+            creep.getEnergy("Storage")
             if(creep.store.getFreeCapacity(RESOURCE_ENERGY) == 0){
                 creep.target = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
                 creep.memory.working = true

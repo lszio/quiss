@@ -41,12 +41,12 @@ class CreepExtension extends Creep {
             if(prefer=="Source"){
                 this.source = this.room.sources[Game.time%this.room.sources.length]
             }
-            if(prefer=="Storage" && !this.source){
+            if(prefer=="Storage"){
                 if(this.room.storage && this.room.storage.store.getUsedCapacity(RESOURCE_ENERGY) > 0){
                     this.source = this.room.storage
                 }
             }
-            if(prefer=="Container" && !this.source){
+            if(prefer=="Container" || !this.source){
                 this.source = this.pos.findClosestByRange(FIND_STRUCTURES, {
                     filter: (s) => {
                         return s.structureType == STRUCTURE_CONTAINER &&

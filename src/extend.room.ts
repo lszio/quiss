@@ -92,6 +92,7 @@ class RoomExtension extends Room {
         if(this.spawn.tasks.length > 0){
             return `[Room ${this.name}]: Spawn still have tasks`
         }
+        let staff = this.memory.staff
         this.memory.staff = undefined
         this.staff
         for(const name in Game.creeps){
@@ -102,6 +103,12 @@ class RoomExtension extends Room {
         }
         for(const role of roleTypes){
             console.log(`[Room ${this.name}]: Staff ${role}: ${this.memory.staff[role]}`)
+        }
+        for(const role of roleTypes){
+            if(staff[role] > this.memory.staff[role]){
+                this.initStaff()
+                console.log(`[Room ${this.name}]: Init staff`)
+            }
         }
         return OK
     }
