@@ -19,6 +19,9 @@ class SpawnExtension extends Spawn {
             return OK
         }
         let task = this.memory.tasks[0]
+        if(!bodyConfigs[task.memory.role]){
+            this.tasks.shift()
+        }
         if(!task.memory.role){
             task.memory.role = task.name.split("_")[1]
         }

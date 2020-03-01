@@ -1,32 +1,40 @@
 export default {
     "Harvester": (creep: Creep) => {
         if(!creep.memory.working){
-            let targets = creep.room.find(FIND_STRUCTURES, {
-                filter: (structure) => {
-                    return (   
-                            structure.structureType == STRUCTURE_CONTAINER || 
-                            structure.structureType == STRUCTURE_SPAWN ||
-                            structure.structureType == STRUCTURE_EXTENSION
-                        ) &&
-                        structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0 
-                }
-            });
-            if(targets.length > 0){
-                creep.target = targets[0];
+            if(creep.store.getFreeCapacity(RESOURCE_ENERGY) > 0){
+                creep.getEnergy("Source")
+            }else{
                 creep.memory.working=true;
             }
         }else{
-            if(creep.store.getFreeCapacity(RESOURCE_ENERGY) > 0){
-                creep.getEnergy("Source")
+            if(!creep.target){
+                let targets = creep.room.find(FIND_STRUCTURES, {
+                    filter: (structure) => {
+                        return (   
+                                structure.structureType == STRUCTURE_CONTAINER || 
+                                structure.structureType == STRUCTURE_SPAWN ||
+                                structure.structureType == STRUCTURE_EXTENSION
+                            ) &&
+                            structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0 
+                    }
+                });
+                if(targets.length == 0){
+                    creep.taskRest()
+                    return OK
+                }
+                creep.target = targets[0];
             }else{
                 let result = creep.transfer(creep.target, RESOURCE_ENERGY)
                 if( result == ERR_NOT_IN_RANGE){
                     creep.moveTo(creep.target)
                 }else if( result == ERR_FULL){
-                    creep.memory.working=false
+                    creep.target=undefined
+                }else if(creep.target.structureType != STRUCTURE_CONTAINER){
+                    creep.target=undefined
                 }
-                if(creep.target.structureType != STRUCTURE_CONTAINER){
+                if(creep.store.getUsedCapacity(RESOURCE_ENERGY) == 0){
                     creep.memory.working = false
+                    creep.say("Harvesting!")
                 }
             }
         }
@@ -34,30 +42,38 @@ export default {
     },
     "Charger": function(creep) {
         if(!creep.memory.working) {
-            let targets = creep.room.find(FIND_STRUCTURES, {
-                filter: (structure) => {
-                    return (structure.structureType == STRUCTURE_TOWER ||
-                            structure.structureType == STRUCTURE_SPAWN ||
-                            structure.structureType == STRUCTURE_EXTENSION ||
-                            structure.structureType == STRUCTURE_STORAGE
-                        ) &&
-                        structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0 
-                }
-            });
-            if(targets.length == 0) {
-                return
-            }
-            creep.target = targets[0]
-            creep.memory.working=true;
-            creep.memory.timeToChange = 21
-        }else{
             if(creep.store.getFreeCapacity(RESOURCE_ENERGY) > 0){           
                 creep.getEnergy("Container")
+            }else{
+                creep.memory.working=true;
+                creep.say("Charging!")
+            }
+        }else{
+            if(!creep.target){     
+                let targets = creep.room.find(FIND_STRUCTURES, {
+                    filter: (structure) => {
+                        return (structure.structureType == STRUCTURE_TOWER ||
+                                structure.structureType == STRUCTURE_SPAWN ||
+                                structure.structureType == STRUCTURE_EXTENSION ||
+                                structure.structureType == STRUCTURE_STORAGE
+                            ) &&
+                            structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0 
+                    }
+                });
+                if(targets.length == 0) {
+                    creep.taskRest()
+                    return OK
+                }
+                creep.target = targets[0]
+                creep.memory.working=true;
+                creep.memory.timeToChange = 21 
             }else{
                 let result = creep.transfer(creep.target, RESOURCE_ENERGY)
                 if( result == ERR_NOT_IN_RANGE){
                     creep.moveTo(creep.target)
-                }else if(creep.memory.timeToChange-- == 0 || result == ERR_FULL){
+                }else if(result == ERR_FULL){
+                    creep.target = undefined
+                }else if(creep.memory.timeToChange-- == 0 || creep.store.getUsedCapacity(RESOURCE_ENERGY) == 0){
                     creep.memory.working=false;
                 }
             }
@@ -68,10 +84,17 @@ export default {
         if(!creep.memory.working){
             creep.getEnergy("Storage")
             if(creep.store.getFreeCapacity(RESOURCE_ENERGY) == 0){
-                creep.target = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
                 creep.memory.working = true
             }
         } else {
+            if(!creep.target){
+                creep.target = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
+                if(!creep.target){
+                    creep.taskRest()
+                    return OK
+                }
+                creep.say("Building!")
+            }
             const result = creep.build(creep.target)
             if(result == ERR_NOT_IN_RANGE){
                 creep.moveTo(creep.target)
@@ -85,6 +108,7 @@ export default {
             creep.getEnergy("Storage")
             if(creep.store.getFreeCapacity(RESOURCE_ENERGY) == 0 ){
                 creep.memory.working = true
+                creep.say("Upgrading!")
             }
         }else{
             let result = creep.upgradeController(creep.room.controller)
@@ -102,17 +126,25 @@ export default {
                 creep.memory.working = true
             }
         }else{
-            let targets = creep.room.find(FIND_STRUCTURES, {
-                filter: (s) => { 
-                    return s.hitsMax > s.hits
+            if(!creep.target){
+                let targets = creep.room.find(FIND_STRUCTURES, {
+                    filter: (s) => { 
+                        return s.hitsMax > s.hits
+                    }
+                })
+                targets.sort((b,a) => {
+                    return ((a.hitsMax - a.hits)/ a.hitsMax) - ((b.hitsMax - b.hits) / b.hitsMax)
+                })
+                if(targets.length == 0){
+                    creep.taskRest()
+                    return OK
                 }
-            })
-            targets.sort((b,a) => {
-                return ((a.hitsMax - a.hits)/ a.hitsMax) - ((b.hitsMax - b.hits) / b.hitsMax)
-            })
-            let result = creep.repair(targets[0])
+                creep.target = targets[0]
+                creep.say("Reapiring!")
+            }
+            let result = creep.repair(creep.target)
             if(result == ERR_NOT_IN_RANGE) {
-                creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
+                creep.moveTo(creep.target, {visualizePathStyle: {stroke: '#ffffff'}});
             }
             if(result == ERR_INVALID_TARGET || creep.store.getUsedCapacity(RESOURCE_ENERGY) == 0) {
                 creep.memory.working = false

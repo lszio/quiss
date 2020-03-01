@@ -60,6 +60,7 @@ interface Creep {
     charge(target: Structure)
     getEnergy(prefer: string)
     work()
+    taskRest()
 }
 
 interface CreepMemory {

@@ -26,10 +26,6 @@ class CreepExtension extends Creep {
         }
     }
 
-    public deactive(){
-        this.memory.active = false
-    }
-
     public getTask(taskType:string, structureId: string){
         // TODO Finish function receiveTask of Creep
         
@@ -79,6 +75,13 @@ class CreepExtension extends Creep {
             return OK
         }
         return ERR_FULL
+    }
+
+    taskRest(){
+        let park = Game.flags["P_"+this.room.name]
+        if(park){
+            this.moveTo(park)
+        }
     }
 }
 
