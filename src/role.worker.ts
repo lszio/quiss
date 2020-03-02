@@ -73,7 +73,7 @@ export default {
                     creep.moveTo(creep.target)
                 }else if(result == ERR_FULL){
                     creep.target = undefined
-                }else if(creep.memory.timeToChange-- == 0 || creep.store.getUsedCapacity(RESOURCE_ENERGY) == 0){
+                }else if(creep.memory.timeToChange-- < 0 || creep.store.getUsedCapacity(RESOURCE_ENERGY) == 0){
                     creep.memory.working=false;
                 }
             }
@@ -145,8 +145,10 @@ export default {
             let result = creep.repair(creep.target)
             if(result == ERR_NOT_IN_RANGE) {
                 creep.moveTo(creep.target, {visualizePathStyle: {stroke: '#ffffff'}});
+            }else if(result == ERR_INVALID_TARGET || creep.target.hitsMax == creep.target.hits){
+                creep.target = undefined;
             }
-            if(result == ERR_INVALID_TARGET || creep.store.getUsedCapacity(RESOURCE_ENERGY) == 0) {
+            if(creep.store.getUsedCapacity(RESOURCE_ENERGY) == 0) {
                 creep.memory.working = false
             }
         }
