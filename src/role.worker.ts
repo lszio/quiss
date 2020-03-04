@@ -18,7 +18,7 @@ export default {
                             structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0 
                     }
                 });
-                if(target){
+                if(!target){
                     creep.taskRest()
                     return OK
                 }

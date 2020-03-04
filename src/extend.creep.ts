@@ -37,7 +37,7 @@ class CreepExtension extends Creep {
             if(prefer=="Source"){
                 this.source = this.room.sources[Game.time%this.room.sources.length]
             }
-            if(prefer=="Storage"){
+            if(!prefer || prefer=="Storage"){
                 if(this.room.storage && this.room.storage.store.getUsedCapacity(RESOURCE_ENERGY) > 0){
                     this.source = this.room.storage
                 }
@@ -54,23 +54,20 @@ class CreepExtension extends Creep {
                 this.source = this.room.sources[Game.time%this.room.sources.length]
             }
         }
-
-        if(this.store.getFreeCapacity(RESOURCE_ENERGY) > 0){
-            if(this.source instanceof Source) {
-                const result = this.harvest(this.source)
-                if(result == ERR_NOT_IN_RANGE){
-                    this.moveTo(this.source)
-                }
-                if(this.store.getFreeCapacity(RESOURCE_ENERGY) == 0 && prefer != "Source"){
-                    this.source = undefined
-                }
-            } else {
-                const result = this.withdraw(this.source, RESOURCE_ENERGY)
-                if(result == ERR_NOT_IN_RANGE){
-                    this.moveTo(this.source)
-                }else if(result == ERR_NOT_ENOUGH_RESOURCES){
-                    this.source = undefined
-                }
+        if(this.source instanceof Source) {
+            const result = this.harvest(this.source)
+            if(result == ERR_NOT_IN_RANGE){
+                this.moveTo(this.source)
+            }
+            if(this.store.getFreeCapacity(RESOURCE_ENERGY) == 0 && prefer != "Source"){
+                this.source = undefined
+            }
+        } else {
+            const result = this.withdraw(this.source, RESOURCE_ENERGY)
+            if(result == ERR_NOT_IN_RANGE){
+                this.moveTo(this.source)
+            }else if(result == ERR_NOT_ENOUGH_RESOURCES){
+                this.source = undefined
             }
             return OK
         }
