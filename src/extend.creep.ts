@@ -35,20 +35,25 @@ class CreepExtension extends Creep {
         // TODO improve function getEnergy of Creep
         if(!this.source){
             if(prefer=="Source"){
-                this.source = this.room.sources[Game.time%this.room.sources.length]
-            }
-            if(!prefer || prefer=="Storage"){
-                if(this.room.storage && this.room.storage.store.getUsedCapacity(RESOURCE_ENERGY) > 0){
-                    this.source = this.room.storage
+                if(this.target){
+                    this.source = this.pos.findClosestByRange(FIND_SOURCES)[0]
+                }else{
+                    this.source = this.room.sources[Game.time%this.room.sources.length]
                 }
-            }
-            if(prefer=="Container" || !this.source){
-                this.source = this.pos.findClosestByRange(FIND_STRUCTURES, {
-                    filter: (s) => {
-                        return s.structureType == STRUCTURE_CONTAINER &&
-                            s.store.getUsedCapacity(RESOURCE_ENERGY) > 0
+            }else{
+                if(!prefer || prefer=="Storage"){
+                    if(this.room.storage && this.room.storage.store.getUsedCapacity(RESOURCE_ENERGY) > 0){
+                        this.source = this.room.storage
                     }
-                })
+                }
+                if(prefer=="Container" || !this.source){
+                    this.source = this.pos.findClosestByRange(FIND_STRUCTURES, {
+                        filter: (s) => {
+                            return s.structureType == STRUCTURE_CONTAINER &&
+                                s.store.getUsedCapacity(RESOURCE_ENERGY) > 0
+                        }
+                    })
+                }
             }
             if(!this.source){
                 this.source = this.room.sources[Game.time%this.room.sources.length]

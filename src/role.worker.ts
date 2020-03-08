@@ -8,7 +8,7 @@ export default {
             }
         }else{
             if(!creep.target){
-                let target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                let targets = creep.room.find(FIND_STRUCTURES, {
                     filter: (structure) => {
                         return (   
                                 structure.structureType == STRUCTURE_CONTAINER || 
@@ -18,18 +18,17 @@ export default {
                             structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0 
                     }
                 });
-                if(!target){
+                if(targets.length==0){
                     creep.taskRest()
                     return OK
                 }
-                creep.target = target;
+                creep.target = targets[0];
+                creep.source = undefined
             }else{
                 let result = creep.transfer(creep.target, RESOURCE_ENERGY)
                 if( result == ERR_NOT_IN_RANGE){
                     creep.moveTo(creep.target)
-                }else if( result == ERR_FULL){
-                    creep.target=undefined
-                }else if(creep.target.structureType != STRUCTURE_CONTAINER){
+                }else if( result == ERR_FULL || creep.target.structureType != STRUCTURE_CONTAINER){
                     creep.target=undefined
                 }
                 if(creep.store.getUsedCapacity(RESOURCE_ENERGY) == 0){

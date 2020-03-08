@@ -2,10 +2,10 @@ export const roleTypes = ["Harvester", "Charger", "Builder", "Repairer", "Upgrad
 
 export const staffConfig = {
     "Harvester": 3,
-    "Charger": 2,
+    "Charger": 3,
     "Builder": 1,
     "Repairer": 1,
-    "Upgrader": 3,
+    "Upgrader": 2,
 }
 
 export const bodyConfigs = {
