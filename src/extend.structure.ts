@@ -1,3 +1,5 @@
+import { TaskPriority } from './config'
+
 export default function () {
     extendStructureProperties()
     _.assign(StructureTower.prototype, TowerExtension.prototype)
@@ -13,11 +15,16 @@ class StructureExtension extends Structure {
     }
 
     check() {
-        if(this.store && this.store.getFreeCapacity(RESOURCE_ENERGY) > 0) {
-            this.room.newTask("Harvester", this.id)
-        }
-        if(this.hits < this.hitsMax){
-            this.room.tasks
+        if(this.room.signal['scanTask'] == 1){
+            if(this.store && this.store.getFreeCapacity(RESOURCE_ENERGY) > 0) {
+                if(this.structureType != STRUCTURE_CONTAINER){
+                    this.room.newTask("Charger", this.id, TaskPriority["Charger"][this.structureType])
+                }
+                this.room.newTask("Harvester", this.id, TaskPriority["Charger"][this.structureType])
+            }
+            if(this.hits < this.hitsMax){
+                this.room.newTask("Repairer",this.id, TaskPriority["Repairer"][this.structureType])
+            }
         }
     }
 }
@@ -26,12 +33,14 @@ class TowerExtension extends StructureTower {
     _work() {
         // defence
         let invaders = this.room.find(FIND_HOSTILE_CREEPS)
-        if(invaders && invaders.length > 0)
-        this.attack(invaders[0])
+        if(invaders && invaders.length > 0){
+            this.attack(invaders[0])
+            return
+        }
         // repaire
         let targets = this.room.find(FIND_STRUCTURES, {
             filter : (structure) => {
-                return (structure.hitsMax - structure.hits) / structure.hitsMax < 0.99
+                return (structure.hitsMax - structure.hits) / structure.hitsMax < 0.99 && structure.structureType != STRUCTURE_WALL
             }
         });
         targets.sort((b,a) => {

@@ -12,7 +12,8 @@ interface Room {
     staff: RoomStaff,
     tasks: RoomTask,
     demand: RoomDemand,
-    newTask(role: string, id: string),
+    signal: RoomSignal,
+    newTask(role: string, id: string, priority?: number),
     getTask(role: string)
 }
 
@@ -23,7 +24,8 @@ interface RoomMemory {
     ticketToCheck: number,
     status: RoomStatus,
     spawnId: string,
-    demand: RoomDemand
+    demand: RoomDemand,
+    signal: RoomSignal
 }
 
 interface RoomStatus {
@@ -34,18 +36,22 @@ interface RoomStatus {
     defending: boolean
 }
 
+interface RoomSignal {
+    scanTasks: number,
+    check: number
+}
+
 interface RoomDemand {
     [roleType: string]: number
 }
 
 interface RoomTask {
-    [taskType: string]: string[],
+    [taskType: string]: RoomTaskItem[],
 }
 
 interface RoomTaskItem {
     id: string,
-    need: number,
-    resource?: string
+    priority?: number
 }
 
 interface RoomStaff {

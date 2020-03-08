@@ -11,20 +11,35 @@ class RoomExtension extends Room {
         if(!this.memory.inited){
             this.init()
         }
+        this.tick()
         this.check()
-        this.clearTasks()
     }
     check() {
         // TODO Finish function check of room
-        if(!this.memory.ticketToCheck || this.memory.ticketToCheck <= 0 ){
-            this.memory.ticketToCheck = 21
-        }else{
-            this.memory.ticketToCheck -= 1
-            return
+        if(this.signal['check'] == 0){
+            // Do check
+            if(this.staff && this.spawn.tasks.length == 0 && Game.time%10 == 0){
+                this.scanStaff()
+            }
         }
-        // Do check
-        if(this.staff && this.spawn.tasks.length == 0 && Game.time%10 == 0){
-            this.scanStaff()
+        if(this.signal['scanTask'] == 0){
+            for(const i in this.memory.tasks){
+                this.memory.tasks[i].sort((a,b) => {
+                    return a.priority - b.priority
+                })
+            }
+            console.log("Sort tasks")
+        }else if(this.signal['scanTask'] == 1){
+            this.clearTasks()
+            console.log("clean tasks"+ this.signal['scanTask'])
+        }
+    }
+
+    tick() {
+        for(let item in this.memory.signal){
+            if(this.memory.signal[item]-- < 0){
+                this.memory.signal[item] = 21
+            }
         }
     }
 
@@ -113,18 +128,31 @@ class RoomExtension extends Room {
         return OK
     }
 
-    newTask(role: string,id: string) {
-        this.memory.tasks[role].push(id)
+    scanTasks() {
+        // Repairer
+
+    }
+
+    newTask(role: string, id: string, priority?: number) {
+        let task = {
+            'id' : id
+        }
+        if(priority){
+            task['priority'] = priority
+        }else{
+            task['priority'] = 5
+        }
+        this.memory.tasks[role].push(task)
+        console.log("new Task" + role + priority)
     }
 
     getTask(role: string){
-        if(!this.memory.tasks.sorted){
-            this.memory.tasks["Charger"]
-        }
         if(this.memory.tasks[role].length == 0){
             return
         }
-        return Game.getObjectById(this.memory.tasks[role][0])
+        let task = this.memory.tasks[role].pop()
+        this.memory.tasks[role].push(task)
+        return Game.getObjectById(task['id'])
     }
 }
 
@@ -219,6 +247,18 @@ let extendRoomProperties = () => {
                     }
                 }
                 return this.memory.demand
+            },
+            enumerable: false,
+            configurable: true
+        },
+        'signal': {
+            get: function() {
+                if(!this.memory.signal){
+                    this.memory.signal = {
+                        scanTask: 21
+                    }
+                }
+                return this.memory.signal
             },
             enumerable: false,
             configurable: true

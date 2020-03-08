@@ -10,15 +10,11 @@ class CreepExtension extends Creep {
     public work() {
         // TODO Finish function work of Creep
         if(this.spawning) {
-            // if(!this.memory.value){
-            //     this.memory.value = this.ticksToLive / 30 * this.store.getCapacity()
-            // }
-            // return
+            return
         }
         if(this.memory.role){
             role[this.memory.role](this)
         }
-        
         if(this.ticksToLive == 1) {
             if(this.memory.active) {
                 this.room.spawn.newTask(this.role, this.name, this.memory)

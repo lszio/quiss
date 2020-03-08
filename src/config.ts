@@ -70,3 +70,30 @@ export const bodyConfigs = {
         8: [ WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE, WORK, CARRY, MOVE ]
     }
 }
+
+export const TaskPriority = {
+    "Charger": {
+        "tower": 1,
+        'spawn': 2,
+        "extension": 2,
+        "storage": 5
+    },
+    "Repairer": {
+        'tower': 1,
+        'spawn': 2,
+        'extension': 2,
+        'storage': 5,
+        'road': 8,
+        'rampart': 8,
+        'wall': 9
+    },
+    "Harvester": {
+        'container': 1,
+        'tower': 3,
+        'spawn': 2,
+        'extension': 2,
+        'storage': 5
+    }
+}
+
+export const TaskCheckSpan = 10

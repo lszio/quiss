@@ -23,6 +23,11 @@ export default {
                     return OK
                 }
                 creep.target = targets[0];
+                // creep.target = creep.room.getTask("Harvester")
+                // if(!creep.target){
+                //     creep.taskRest()
+                //     return
+                // }
                 creep.source = undefined
             }else{
                 let result = creep.transfer(creep.target, RESOURCE_ENERGY)
