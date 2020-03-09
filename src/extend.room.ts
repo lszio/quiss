@@ -1,6 +1,6 @@
-import { roleTypes, staffConfig } from './config'
+import { roleTypes, staffConfig, TaskPriority } from './config'
 
-export default function () {
+export default function () {S
     extendRoomProperties()
     _.assign(Room.prototype, RoomExtension.prototype)
 }
@@ -16,22 +16,20 @@ class RoomExtension extends Room {
     }
     check() {
         // TODO Finish function check of room
-        if(this.signal['check'] == 0){
-            // Do check
-            if(this.staff && this.spawn.tasks.length == 0 && Game.time%10 == 0){
-                this.scanStaff()
-            }
-        }
         if(this.signal['scanTask'] == 0){
+            this.clearTasks()
+            this.scanTasks()
             for(const i in this.memory.tasks){
                 this.memory.tasks[i].sort((a,b) => {
                     return a.priority - b.priority
                 })
             }
-            console.log("Sort tasks")
-        }else if(this.signal['scanTask'] == 1){
-            this.clearTasks()
-            console.log("clean tasks"+ this.signal['scanTask'])
+        }
+        if(this.signal['scanStaff'] == 0){
+            // Do check
+            if(this.staff && this.spawn.tasks.length == 0){
+                this.scanStaff()
+            }
         }
     }
 
@@ -99,10 +97,6 @@ class RoomExtension extends Room {
         }
     }
 
-    scan() {
-
-    }
-
     scanStaff() {
         if(this.spawn.tasks.length > 0){
             return `[Room ${this.name}]: Spawn still have tasks`
@@ -130,7 +124,20 @@ class RoomExtension extends Room {
 
     scanTasks() {
         // Repairer
-
+        for(const structure of this.find(FIND_STRUCTURES)){
+            if(structure.store && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0) {
+                if(structure.structureType != STRUCTURE_CONTAINER){
+                    structure.room.newTask("Charger", structure.id, TaskPriority["Charger"][structure.structureType])
+                }
+                structure.room.newTask("Harvester", structure.id, TaskPriority["Charger"][structure.structureType])
+            }
+            if(structure.hits < structure.hitsMax){
+                structure.room.newTask("Repairer",structure.id, TaskPriority["Repairer"][structure.structureType])
+            }
+        }
+        for(const constructuresite of this.find(FIND_CONSTRUCTION_SITES)){
+            constructuresite.room.newTask("Repairer",constructuresite.id, TaskPriority["Repairer"][constructuresite.structureType])
+        }
     }
 
     newTask(role: string, id: string, priority?: number) {
@@ -255,7 +262,8 @@ let extendRoomProperties = () => {
             get: function() {
                 if(!this.memory.signal){
                     this.memory.signal = {
-                        scanTask: 21
+                        scanTask: 21,
+                        scanStaff: 42
                     }
                 }
                 return this.memory.signal

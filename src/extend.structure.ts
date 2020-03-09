@@ -15,17 +15,7 @@ class StructureExtension extends Structure {
     }
 
     check() {
-        if(this.room.signal['scanTask'] == 1){
-            if(this.store && this.store.getFreeCapacity(RESOURCE_ENERGY) > 0) {
-                if(this.structureType != STRUCTURE_CONTAINER){
-                    this.room.newTask("Charger", this.id, TaskPriority["Charger"][this.structureType])
-                }
-                this.room.newTask("Harvester", this.id, TaskPriority["Charger"][this.structureType])
-            }
-            if(this.hits < this.hitsMax){
-                this.room.newTask("Repairer",this.id, TaskPriority["Repairer"][this.structureType])
-            }
-        }
+
     }
 }
 
