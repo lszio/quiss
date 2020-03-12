@@ -1,104 +1,83 @@
 declare module NodeJS {
     interface Global {
-        Extended: boolean
+        extended: boolean
     }
 }
+
 // Room interface
 interface Room {
-    sources: Source[],
-    tower: StructureTower,
-    factory: StructureFactory,
-    spawn: StructureSpawn,
-    staff: RoomStaff,
-    tasks: RoomTask,
-    demand: RoomDemand,
-    signal: RoomSignal,
-    newTask(role: string, id: string, priority?: number),
-    getTask(role: string)
+    sources: Source[]
+    spawns: StructureSpawn[]
+    status: RoomStatus
+    staff: RoomStaff
+    tasks: RoomTask
+    signal: RoomSignal
+    newTask(role: string, id: string, priority?: number): string | void
+    getTask(role: string): Structure
+    doWork(): string | number
 }
 
 interface RoomMemory {
-    inited: boolean,
-    tasks: RoomTask,
-    staff: RoomStaff,
-    ticketToCheck: number,
-    status: RoomStatus,
-    spawnId: string,
-    demand: RoomDemand,
+    sourceIds: string[]
+    spawnIds: string[]
+    storage: string
+    status: RoomStatus
     signal: RoomSignal
+    staff: RoomStaff
+    tasks: RoomTask
 }
 
 interface RoomStatus {
-    developing: boolean,
-    building: boolean,
-    upgrading: boolean,
-    attacking: boolean,
-    defending: boolean
+    developing: boolean
+    defencing: boolean
+    attacking: boolean
+    inited: boolean
 }
 
 interface RoomSignal {
-    scanTasks: number,
-    check: number
-}
-
-interface RoomDemand {
-    [roleType: string]: number
-}
-
-interface RoomTask {
-    [taskType: string]: RoomTaskItem[],
-}
-
-interface RoomTaskItem {
-    id: string,
-    priority?: number
+    scanTasks: number
+    scanStaff: number
+    scanStructure: number
 }
 
 interface RoomStaff {
-    [role:string]: number
+    [role: string]: string[]
 }
-// Creep interface
 
+interface RoomTask {
+    [role: string]: string[]
+}
+
+// Creep interface
 interface Creep {
+    status: CreepStatus
     role: string
     source: Source | Structure
     target: Structure
-    charge(target: Structure)
-    getEnergy(prefer: string)
-    work()
-    taskRest()
+    getEnergy(prefer?:string): string | number
+    takeRest(): void
 }
 
 interface CreepMemory {
-    role?: string
-    charging?: boolean
-    working?: boolean
-    sourceId?: string
-    targetId?: string
-    value?: number
-    active?: boolean
-    timeToChange?: number
-}
-interface RoleConfig {
-    work?: (creep: Creep) => any
-    body?: BodyConfig
+    status: CreepStatus
+    role: string
+    sourceId: string
+    targetId: string
 }
 
-interface BodyConfig {
-    [MOVE]?: number
-    [CARRY]?: number
-    [ATTACK]?: number
-    [RANGED_ATTACK]?: number
-    [WORK]?: number
-    [CLAIM]?: number
-    [TOUGH]?: number
-    [HEAL]?: number
+interface CreepStatus {
+    working: boolean
+    active: boolean
+    spawning: boolean
 }
 
 // Spawn interface
-interface StructureSpawn {
+interface Spawn {
     tasks: SpawnTask[]
-    work()
+}
+
+interface SpawnMemory {
+    tasks: SpawnTask[]
     newTask(role:string, name?:string, memory?:object)
 }
 
@@ -107,38 +86,9 @@ interface SpawnTask {
     level: number
     memory: CreepMemory
 }
-
-interface SpawnMemory {
-    tasks: SpawnTask[]
-}
-
-interface SpawnOptions {
-}
-
-interface Mode {
-    develop: boolean
-    defence: boolean
-    attack: boolean
-}
-
-// Memory
-interface Memory {
-    mode: Mode,
-    structures: Object,
-    brain: Object
-    inited: boolean
-}
-
 // Structure
 interface Structure {
-    workers: number,
     store?: any
-    _work()
+    doWork()
     check()
-    work()
-}
-
-interface StructureMemory {
-    workers: number,
-    tag: string
 }

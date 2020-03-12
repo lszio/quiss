@@ -1,14 +1,10 @@
-import base from './base'
-import extend from './extend'
-import { doWork } from './utils'
+import extend from "./extend"
 
-module.exports.loop = function(): void {
-    // load extensions
+module.exports.loop = function() {
     extend()
-    // base creeps
-    // base()
-    // all units do it's work
-    doWork(Game.rooms)
-    doWork(Game.structures)
-    doWork(Game.creeps)
+    for(const roomName in Game.rooms){
+        if(Game.rooms[roomName].doWork() != OK){
+            console.log("Error")
+        }
+    }
 }

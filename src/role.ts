@@ -1,5 +1,5 @@
-import roleWorker from './role.worker'
+// import roleWorker from './role.worker'
 
 export default {
-    ...roleWorker
+    // ...roleWorker
 }

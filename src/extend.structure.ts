@@ -1,26 +1,31 @@
-import { TaskPriority } from './config'
+import { creepConfig } from './config'
 
 export default function () {
     extendStructureProperties()
-    _.assign(StructureTower.prototype, TowerExtension.prototype)
+    extendSpawnProperties()
     _.assign(Structure.prototype, StructureExtension.prototype)
+    _.assign(Spawn.prototype, SpawnExtension.prototype)
+    _.assign(StructureTower.prototype, TowerExtension.prototype)
 }
 
 class StructureExtension extends Structure {
-    work() {
-        if(this._work) {
-            this._work()
-        }
+    doWork() {
+        this.check()
+        this.work()
         this.check()
     }
 
     check() {
 
     }
+
+    work() {
+
+    }
 }
 
 class TowerExtension extends StructureTower {
-    _work() {
+    work() {
         // defence
         let invaders = this.room.find(FIND_HOSTILE_CREEPS)
         if(invaders && invaders.length > 0){
@@ -42,50 +47,75 @@ class TowerExtension extends StructureTower {
 
 let extendStructureProperties = () => {
     Object.defineProperties(Structure.prototype, {
-        'workers': {
-            // TODO Improve property workers of Structure
-            get: function() {
-                if(!this.memory.workers){
-                    this.memory.workers = 0
-                }
-                return this.memory.workers
-            },
-            set: function(newValue) {
-                // let oldValue = this.memory.workers
-                this.memory.workers = newValue
-            },
-            enumerable: false,
-            configurable: true
-        },
-        'memory': {
-            get: function() {
-                if(!this.memory) {
-                    if(!Memory.structures){
-                        Memory.structures = {}
-                    }
-                    if(!Memory.structures[this.id]){
-                        Memory.structures[this.id] = {}
-                    }
-                    this.memory = Memory.structures[this.id]
-                }
-                return this.memory
-            },
-            set: function (newValue: Object) {
-                let oldValue = this.memory
-                this.memory = {...oldValue, newValue}
-            },
-            enumerable: false,
-            configurable: true
-        },
-        'tag': {
-            get: function() {
-                return this.memory.tag
-            },
-            set: function (newValue: string) {
-                this.memory.tag = newValue
-            },
-            enumerable: false,
-            configurable: true
+        
+    });
+}
+
+class SpawnExtension extends Spawn {
+    work() {
+        // TODO Improve function work of Spawn
+        if(this.spawning){
+            return ERR_BUSY
         }
+        this.finishTask()
+    }
+
+    finishTask(){
+        if(!this.memory.tasks || this.memory.tasks.length == 0){
+            return OK
+        }
+        let task = this.memory.tasks[0]
+        if(!creepConfig.bodyConfig[task.memory.role]){
+            this.memory.tasks.shift()
+        }
+        if(!task.memory.role){
+            task.memory.role = task.name.split("_")[1]
+        }
+        if(Game.creeps[task.name]){
+            if(Game.creeps[task.name].ticksToLive > 10){
+                console.log(`[Room ${this.room.name}]: Already have ${task.name}`)
+                this.memory.tasks.shift()
+            }
+            return
+        }
+        let body = (creepConfig.bodyConfig[task.memory.role])[task.level]
+        let result = this.spawnCreep(body, task.name, { memory: task.memory })
+        if(result == OK ){
+            this.memory.tasks.shift()
+            console.log(`[Room ${this.room.name}]: ${task.name} spawned,level: ${task.level}`)
+            return OK
+        }else if((result = ERR_NOT_ENOUGH_ENERGY) && this.memory.tasks[0].level>1){
+            this.memory.tasks[0].level -= 1
+        }
+    }
+
+    newTask(role, name, memory?:CreepMemory) {
+        let level = this.room.controller.level
+        let spawnTask = {
+            "name": name,
+            "level": level,
+            "memory": {
+                ...memory,
+                "role": role,
+                "active": true
+            }
+        }
+
+        this.memory.tasks.push(spawnTask)
+    }
+}
+
+let extendSpawnProperties = () => {
+    Object.defineProperties(Spawn.prototype, {
+        "tasks": {
+            get: function() {
+                if(!this.memory.tasks){
+                    this.memory.tasks = []
+                }
+                return this.memory.tasks
+            },
+            enumerable: false,
+            configurable: true
+        } 
     });
 }

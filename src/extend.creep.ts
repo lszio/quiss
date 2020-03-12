@@ -15,11 +15,6 @@ class CreepExtension extends Creep {
         if(this.memory.role){
             role[this.memory.role](this)
         }
-        if(this.ticksToLive == 1) {
-            if(this.memory.active) {
-                this.room.spawn.newTask(this.role, this.name, this.memory)
-            }
-        }
     }
 
     public getTask(taskType:string, structureId: string){
