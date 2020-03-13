@@ -40,13 +40,13 @@ export default {
         }
         return OK
     },
-    "Charger": function(creep) {
+    "Transfer": function(creep) {
         if(!creep.memory.status.working) {
             if(creep.store.getFreeCapacity(RESOURCE_ENERGY) > 0){           
                 creep.getEnergy("Container")
             }else{
                 creep.memory.status.working=true;
-                creep.say("Charging!")
+                creep.say("Transfering!")
             }
         }else{
             if(!creep.target){     

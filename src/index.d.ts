@@ -8,23 +8,33 @@ declare module NodeJS {
 interface Room {
     sources: Source[]
     spawns: StructureSpawn[]
+    structures: {
+        [role: string]: Structure[]
+    }
     status: RoomStatus
     staff: RoomStaff
     tasks: RoomTask
     signal: RoomSignal
+    logs: string[]
     newTask(role: string, id: string, priority?: number): string | void
     getTask(role: string): Structure
     doWork(): string | number
+    showLog(): void
+    addLog(log:string): void
 }
 
 interface RoomMemory {
     sourceIds: string[]
     spawnIds: string[]
+    structureIds: {
+        [role: string]: string[]
+    }
     storage: string
     status: RoomStatus
     signal: RoomSignal
     staff: RoomStaff
     tasks: RoomTask
+    logs: string[]
 }
 
 interface RoomStatus {
@@ -32,12 +42,13 @@ interface RoomStatus {
     defencing: boolean
     attacking: boolean
     inited: boolean
+    logging: boolean
 }
 
 interface RoomSignal {
     scanTasks: number
     scanStaff: number
-    scanStructure: number
+    scanStructures: number
 }
 
 interface RoomStaff {
@@ -61,24 +72,23 @@ interface Creep {
 interface CreepMemory {
     status: CreepStatus
     role: string
-    sourceId: string
-    targetId: string
+    sourceId?: string
+    targetId?: string
 }
 
 interface CreepStatus {
     working: boolean
     active: boolean
-    spawning: boolean
 }
 
 // Spawn interface
-interface Spawn {
+interface StructureSpawn {
     tasks: SpawnTask[]
+    newTask(role:string, name?:string, memory?:object)
 }
 
 interface SpawnMemory {
     tasks: SpawnTask[]
-    newTask(role:string, name?:string, memory?:object)
 }
 
 interface SpawnTask {
@@ -91,4 +101,8 @@ interface Structure {
     store?: any
     doWork()
     check()
+}
+
+interface _ {
+    mapValues(obj: object, callback)
 }

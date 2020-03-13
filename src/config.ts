@@ -3,11 +3,13 @@ export const roomConfig = {
         developing: true,
         attacking: false,
         defencing: false,
-        inited: false
+        inited: false,
+        logging: true
     },
     signal: {
         scanTasks: 21,
-        scanStaff: 42
+        scanStaff: 42,
+        scanStructures: 63
     },
     taskPriority: {
         Harvester: {

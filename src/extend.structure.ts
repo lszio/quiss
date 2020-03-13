@@ -16,7 +16,7 @@ class StructureExtension extends Structure {
     }
 
     check() {
-
+        console.log("Super")
     }
 
     work() {
@@ -60,6 +60,11 @@ class SpawnExtension extends Spawn {
         this.finishTask()
     }
 
+    check() {
+        console.log("Spawn")
+        // Check Memory
+        this.tasks
+    }
     finishTask(){
         if(!this.memory.tasks || this.memory.tasks.length == 0){
             return OK
@@ -97,7 +102,7 @@ class SpawnExtension extends Spawn {
             "memory": {
                 ...memory,
                 "role": role,
-                "active": true
+                "status": creepConfig.status
             }
         }
 
