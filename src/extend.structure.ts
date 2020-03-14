@@ -16,11 +16,9 @@ class StructureExtension extends Structure {
     }
 
     check() {
-        console.log("Super")
     }
 
     work() {
-
     }
 }
 
@@ -61,7 +59,6 @@ class SpawnExtension extends Spawn {
     }
 
     check() {
-        console.log("Spawn")
         // Check Memory
         this.tasks
     }
@@ -87,6 +84,9 @@ class SpawnExtension extends Spawn {
         let result = this.spawnCreep(body, task.name, { memory: task.memory })
         if(result == OK ){
             this.memory.tasks.shift()
+            if(Memory.creeps[task.name].status.spawning){
+                delete Memory.creeps[task.name].status.spawning
+            }
             console.log(`[Room ${this.room.name}]: ${task.name} spawned,level: ${task.level}`)
             return OK
         }else if((result = ERR_NOT_ENOUGH_ENERGY) && this.memory.tasks[0].level>1){
@@ -95,6 +95,9 @@ class SpawnExtension extends Spawn {
     }
 
     newTask(role, name, memory?:CreepMemory) {
+        if(this.tasks.length > 10){
+            return
+        }
         let level = this.room.controller.level
         let spawnTask = {
             "name": name,

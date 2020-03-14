@@ -17,7 +17,7 @@ interface Room {
     signal: RoomSignal
     logs: string[]
     newTask(role: string, id: string, priority?: number): string | void
-    getTask(role: string): Structure
+    getTask(role: string): string
     doWork(): string | number
     showLog(): void
     addLog(log:string): void
@@ -56,7 +56,10 @@ interface RoomStaff {
 }
 
 interface RoomTask {
-    [role: string]: string[]
+    [role: string]: {
+        id: string, 
+        priority?: number
+    }[]
 }
 
 // Creep interface
@@ -67,6 +70,7 @@ interface Creep {
     target: Structure
     getEnergy(prefer?:string): string | number
     takeRest(): void
+    doWork(): void
 }
 
 interface CreepMemory {
@@ -79,6 +83,7 @@ interface CreepMemory {
 interface CreepStatus {
     working: boolean
     active: boolean
+    spawning?: boolean
 }
 
 // Spawn interface

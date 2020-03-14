@@ -6,8 +6,10 @@ export default function() {
 }
 
 class CreepExtension extends Creep {
-
-    public work() {
+    doWork() {
+        this.work()
+    }
+    work() {
         // TODO Finish function work of Creep
         if(this.spawning) {
             return
@@ -17,12 +19,7 @@ class CreepExtension extends Creep {
         }
     }
 
-    public getTask(taskType:string, structureId: string){
-        // TODO Finish function receiveTask of Creep
-        
-    }
-
-    public getEnergy(prefer?:string) {
+    getEnergy(prefer?:string) {
         // TODO improve function getEnergy of Creep
         if(!this.source){
             if(prefer=="Source"){
@@ -70,7 +67,7 @@ class CreepExtension extends Creep {
         return ERR_FULL
     }
 
-    taskRest(){
+    takeRest(){
         let park = Game.flags["P_"+this.room.name]
         if(park){
             this.moveTo(park)
