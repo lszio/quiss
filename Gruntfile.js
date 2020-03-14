@@ -1,4 +1,4 @@
-const { email, password, officialPath, localPath, serverPath } = require('./private')
+const config = require('./private')
 
 module.exports = function(grunt) {
     grunt.loadNpmTasks("grunt-ts")
@@ -20,8 +20,8 @@ module.exports = function(grunt) {
         },
         'screeps': {
             options: {
-                email: email,
-                password: password,
+                email: config.email,
+                password: config.password,
                 branch: "default",
                 ptr: false
             },
@@ -37,21 +37,28 @@ module.exports = function(grunt) {
                 expand: true,
                 cwd: 'dist',
                 src: '**',
-                dest: localPath,
+                dest: config.localPath,
+                filter: 'isFile'
+            },
+            rpi: {
+                expand: true,
+                cwd: 'dist',
+                src: '**',
+                dest: config.rpiPath,
                 filter: 'isFile'
             },
             server: {
                 expand: true,
                 cwd: 'dist',
                 src: '**',
-                dest: serverPath,
+                dest: config.serverPath,
                 filter: 'isFile'
             },
             official: {
                 expand: true,
                 cwd: 'dist',
                 src: '**',
-                dest: officialPath,
+                dest: config.officialPath,
                 filter: 'isFile'
             }
         },
@@ -63,6 +70,10 @@ module.exports = function(grunt) {
             local: {
                 files: "src/*.ts",
                 tasks: ['clean', "ts", "copy:local"]
+            },
+            rpi: {
+                files: "src/*.ts",
+                tasks: ['clean', "ts", "copy:rpi"]
             },
             server: {
                 files: "src/*.ts",

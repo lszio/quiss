@@ -23,6 +23,11 @@ export const roomConfig = {
             "extension": 1,
             "tower": 2,
             "storage": 9
+        },
+        Repairer: {
+            "tower": 1,
+            "road": 2,
+            "wall": 9
         }
     }
 }

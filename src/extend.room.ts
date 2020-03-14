@@ -8,7 +8,7 @@ export default function () {
 
 class RoomExtension extends Room {
     doWork(): string | number {
-        this.check()
+        // this.check()
         this.work()
         this.tick()
         if(this.status.logging){
@@ -23,6 +23,9 @@ class RoomExtension extends Room {
         }
         if(this.signal["scanTasks"] == 0){
             this.scanTasks()
+        }
+        if(this.signal["scanStaff"] == 0){
+            this.scanStaff()
         }
         // Structure doWork
         for(const type in this.structures){
@@ -55,11 +58,38 @@ class RoomExtension extends Room {
         this.signal
         // Check Staff
         if(this.spawns[0].tasks.length == 0){
+            // Builder
             if(this.tasks["Builder"] && this.tasks["Builder"].length > 0 && this.staff["Builder"].length < 3){
                 this.moreStaff("Builder")
+            }else if(this.tasks["Builder"].length == 0 && this.staff["Builder"].length > 0){
+                this.lessStaff("Builder")
             }
+            // Repairer
             if(!this.structures[STRUCTURE_TOWER] && this.staff["Repairer"].length < 1){
                 this.moreStaff("Repairer")
+            }else if(this.structures[STRUCTURE_TOWER] && this.tasks["Repairer"].length < 3 && this.staff["Repairer"].length > 0){
+                this.lessStaff("Repairer")
+            }
+            // Harvester
+            let lackEnergy = (this.find(FIND_STRUCTURES,{ filter: (s) => {
+                return s.structureType == STRUCTURE_CONTAINER && s.store.getUsedCapacity(RESOURCE_ENERGY)/s.store.getCapacity(RESOURCE_ENERGY) < 0.5
+            }}).length / this.structures[STRUCTURE_CONTAINER].length > 0.4)
+            if(lackEnergy && this.staff["Harvester"] && this.staff["Harvester"].length < 3){
+                this.moreStaff("Harvester")
+            }else if(!lackEnergy && this.staff["Harvester"].length > 1){
+                this.lessStaff("Harvester")
+            }
+            // Transfer
+            if(this.tasks["Transfer"] && this.tasks["Transfer"].length > 0 && this.staff["Transfer"].length < 3){
+                this.moreStaff("Transfer")
+            }else if(!this.tasks["Transfer"] || this.tasks['Transfer'].length < 0 && this.staff["Transfer"].length > 1){
+                this.lessStaff("Transfer")
+            }
+            // Upgrader
+            if(!lackEnergy && this.staff["Upgrader"] && this.staff["Upgrader"].length < 3 && this.controller.level < 9){
+                this.moreStaff("Upgrader")
+            }else if((lackEnergy && this.staff["Upgrader"].length > 1) || (this.staff["Upgrader"].length > 0 && this.controller.level == 9)){
+                this.lessStaff("Upgrader")
             }
         }
     }
@@ -90,8 +120,10 @@ class RoomExtension extends Room {
         }
     }
     moreStaff(role: string) {
+        if(!this.staff[role]){
+            this.memory.staff[role] = []
+        }
         let name = [this.name,role,this.staff[role].length+1].join('_')
-        this.memory.staff[role].push(name)
         this.spawns[0].newTask(role,name)
     }
     lessStaff(role: string) {
@@ -102,9 +134,20 @@ class RoomExtension extends Room {
     clear() {
         delete this.memory
     }
+    clearStaff(){
+        for(const roleName in this.staff){
+            for(const name of this.staff[roleName]){
+                if(Game.creeps[name]){
+                    Game.creeps[name].suicide()
+                }
+            }
+        }
+    }
     scanStructures() {
         this.memory.structureIds = {}
-        let structures = this.find(FIND_MY_STRUCTURES)
+        let structures = this.find(FIND_STRUCTURES, { filter: (s) => {
+            return s.structureType != STRUCTURE_ROAD
+        }})
         for(let structure of structures){
             if(!this.memory.structureIds[structure.structureType]){
                 this.memory.structureIds[structure.structureType]=[structure.id]
@@ -122,6 +165,11 @@ class RoomExtension extends Room {
             }else{
                 this.memory.staff[creep.memory.role].push(creep.name)
             }
+        }
+        for(const roleName in this.staff){
+            this.memory.staff[roleName].sort((a,b)=>{
+                return parseInt(a.split("_")[-1]) - parseInt(b.split("_")[-1])
+            })
         }
     }
     scanTasks() {
