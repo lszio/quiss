@@ -61,7 +61,7 @@ export default {
                     }
                 });
                 if(targets.length == 0) {
-                    creep.taskRest()
+                    creep.takeRest()
                     return OK
                 }
                 creep.target = targets[0]
@@ -90,7 +90,7 @@ export default {
             if(!creep.target){
                 creep.target = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
                 if(!creep.target){
-                    creep.taskRest()
+                    creep.takeRest()
                     return OK
                 }
                 creep.say("Building!")
@@ -136,7 +136,7 @@ export default {
                     return ((a.hitsMax - a.hits)/ a.hitsMax) - ((b.hitsMax - b.hits) / b.hitsMax)
                 })
                 if(targets.length == 0){
-                    creep.taskRest()
+                    creep.takeRest()
                     return OK
                 }
                 creep.target = targets[0]

@@ -55,8 +55,11 @@ class RoomExtension extends Room {
         this.signal
         // Check Staff
         if(this.spawns[0].tasks.length == 0){
-            if(this.tasks["Builder"].length > 0 && this.staff["Builder"].length < 3){
+            if(this.tasks["Builder"] && this.tasks["Builder"].length > 0 && this.staff["Builder"].length < 3){
                 this.moreStaff("Builder")
+            }
+            if(!this.structures[STRUCTURE_TOWER] && this.staff["Repairer"].length < 1){
+                this.moreStaff("Repairer")
             }
         }
     }
