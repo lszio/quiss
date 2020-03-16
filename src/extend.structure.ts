@@ -9,13 +9,13 @@ export default function () {
 }
 
 class StructureExtension extends Structure {
-    doWork() {
+    doWork():void  {
         this.check()
         this.work()
         this.check()
     }
 
-    check() {
+    check(): void {
     }
 
     work() {
@@ -109,8 +109,8 @@ class SpawnExtension extends Spawn {
                 "status": creepConfig.status
             }
         }
-
         this.memory.tasks.push(spawnTask)
+        return name
     }
 }
 

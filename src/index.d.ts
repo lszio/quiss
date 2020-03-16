@@ -18,7 +18,7 @@ interface Room {
     logs: string[]
     newTask(role: string, id: string, priority?: number): string | void
     getTask(role: string): string
-    doWork(): string | number
+    doWork(): string | number | void
     showLog(): void
     addLog(log:string): void
 }
@@ -70,7 +70,7 @@ interface Creep {
     target: Structure
     getEnergy(prefer?:string): string | number
     takeRest(): void
-    doWork(): void
+    doWork(): string | number | void
 }
 
 interface CreepMemory {
@@ -89,7 +89,7 @@ interface CreepStatus {
 // Spawn interface
 interface StructureSpawn {
     tasks: SpawnTask[]
-    newTask(role:string, name?:string, memory?:object)
+    newTask(role:string, name?:string, memory?:object): string
 }
 
 interface SpawnMemory {
@@ -104,10 +104,10 @@ interface SpawnTask {
 // Structure
 interface Structure {
     store?: any
-    doWork()
-    check()
+    doWork(): string | number | void
+    check(): string | number | void
 }
 
 interface _ {
-    mapValues(obj: object, callback)
+    mapValues(obj: object, callback: any): string
 }

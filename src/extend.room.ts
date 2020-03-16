@@ -8,9 +8,10 @@ export default function () {
 
 class RoomExtension extends Room {
     doWork(): string | number {
-        // this.check()
-        this.work()
+        this.check()
         this.tick()
+        this.work()
+
         if(this.status.logging){
             this.showLog()
         }
@@ -57,40 +58,8 @@ class RoomExtension extends Room {
         this.tasks
         this.signal
         // Check Staff
-        if(this.spawns[0].tasks.length == 0){
-            // Builder
-            if(this.tasks["Builder"] && this.tasks["Builder"].length > 0 && this.staff["Builder"].length < 3){
-                this.moreStaff("Builder")
-            }else if(this.tasks["Builder"].length == 0 && this.staff["Builder"].length > 0){
-                this.lessStaff("Builder")
-            }
-            // Repairer
-            if(!this.structures[STRUCTURE_TOWER] && this.staff["Repairer"].length < 1){
-                this.moreStaff("Repairer")
-            }else if(this.structures[STRUCTURE_TOWER] && this.tasks["Repairer"].length < 3 && this.staff["Repairer"].length > 0){
-                this.lessStaff("Repairer")
-            }
-            // Harvester
-            let lackEnergy = (this.find(FIND_STRUCTURES,{ filter: (s) => {
-                return s.structureType == STRUCTURE_CONTAINER && s.store.getUsedCapacity(RESOURCE_ENERGY)/s.store.getCapacity(RESOURCE_ENERGY) < 0.5
-            }}).length / this.structures[STRUCTURE_CONTAINER].length > 0.4)
-            if(lackEnergy && this.staff["Harvester"] && this.staff["Harvester"].length < 3){
-                this.moreStaff("Harvester")
-            }else if(!lackEnergy && this.staff["Harvester"].length > 1){
-                this.lessStaff("Harvester")
-            }
-            // Transfer
-            if(this.tasks["Transfer"] && this.tasks["Transfer"].length > 0 && this.staff["Transfer"].length < 3){
-                this.moreStaff("Transfer")
-            }else if(!this.tasks["Transfer"] || this.tasks['Transfer'].length < 0 && this.staff["Transfer"].length > 1){
-                this.lessStaff("Transfer")
-            }
-            // Upgrader
-            if(!lackEnergy && this.staff["Upgrader"] && this.staff["Upgrader"].length < 3 && this.controller.level < 9){
-                this.moreStaff("Upgrader")
-            }else if((lackEnergy && this.staff["Upgrader"].length > 1) || (this.staff["Upgrader"].length > 0 && this.controller.level == 9)){
-                this.lessStaff("Upgrader")
-            }
+        if(this.spawns[0].tasks && this.spawns[0].tasks.length == 0){
+            // TODO
         }
     }
     init() {
@@ -132,7 +101,11 @@ class RoomExtension extends Room {
         delete Memory.creeps[name]
     }
     clear() {
+        return OK
+    }
+    clearMemory () {
         delete this.memory
+        return `[Room $this.name] clearMemory`
     }
     clearStaff(){
         for(const roleName in this.staff){
@@ -240,6 +213,10 @@ let extendRoomProperties = function() {
                         this.scanStructures()
                     }
                     this._spawns = this.memory.structureIds[STRUCTURE_SPAWN].map(id => Game.getObjectById(id))
+                    if(!this._spawns){
+                        this._spawns = this.find(FIND_MY_STRUCTURES, { filter: (s) => s.structureType == STRUCTURE_SPAWN})
+                        this.memory.structureIds[STRUCTURE_SPAWN] = this._spawns.map(s => s.id)
+                    }
                 }
                 return this._spawns
             },

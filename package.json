@@ -22,6 +22,7 @@
     "grunt-contrib-watch": "^1.1.0",
     "grunt-screeps": "^1.4.0",
     "grunt-ts": "^6.0.0-beta.22",
+    "source-map": "^0.7.3",
     "typescript": "^3.7.5"
   }
 }
