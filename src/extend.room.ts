@@ -58,9 +58,6 @@ class RoomExtension extends Room {
         this.tasks
         this.signal
         // Check Staff
-        if(this.spawns[0].tasks && this.spawns[0].tasks.length == 0){
-            // TODO
-        }
     }
     init() {
 
@@ -94,11 +91,17 @@ class RoomExtension extends Room {
         }
         let name = [this.name,role,this.staff[role].length+1].join('_')
         this.spawns[0].newTask(role,name)
+        let result = `[Room ${this.name}] New staff ${name}`
+        this.addLog(result)
+        return result
     }
     lessStaff(role: string) {
         let name = this.memory.staff[role].pop()
         Game.creeps[name].suicide()
         delete Memory.creeps[name]
+        let result = `[Room ${this.name}] staff ${name} Retired`
+        this.addLog(result)
+        return result
     }
     clear() {
         return OK
@@ -213,7 +216,7 @@ let extendRoomProperties = function() {
                         this.scanStructures()
                     }
                     this._spawns = this.memory.structureIds[STRUCTURE_SPAWN].map(id => Game.getObjectById(id))
-                    if(!this._spawns){
+                    if(this._spawns == null){
                         this._spawns = this.find(FIND_MY_STRUCTURES, { filter: (s) => s.structureType == STRUCTURE_SPAWN})
                         this.memory.structureIds[STRUCTURE_SPAWN] = this._spawns.map(s => s.id)
                     }
