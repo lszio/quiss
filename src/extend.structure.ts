@@ -84,7 +84,12 @@ class SpawnExtension extends Spawn {
         let result = this.spawnCreep(body, task.name, { memory: task.memory })
         if(result == OK ){
             this.memory.tasks.shift()
-            this.room.staff[task.memory.role].push(task.name)
+            if(!this.room.staff[task.memory.role]){
+                this.room.staff[task.memory.role]=[task.name]
+            }else{
+                this.room.staff[task.memory.role].push(task.name)
+            }
+            
             if(Memory.creeps[task.name].status.spawning){
                 delete Memory.creeps[task.name].status.spawning
             }

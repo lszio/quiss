@@ -51,13 +51,35 @@ class RoomExtension extends Room {
     check() {
         // Check Memory
         this.status
-        this.structures
-        this.spawns
-        this.sources
-        this.staff
-        this.tasks
         this.signal
+        this.sources
+        if(!this.structures){
+            this.scanStructures()
+        }
+        if(!this.staff){
+            this.scanStaff()
+        }
+        if(!this.tasks){
+            this.scanTasks
+        }
         // Check Staff
+        if(this.spawns[0].tasks && this.spawns[0].tasks.length == 0){
+            if(!this.staff["Harvester"] || this.staff["Harvester"].length < 1){
+                this.moreStaff("Harvester")
+            }
+            if(!this.staff["Transfer"] || this.staff["Transfer"].length < 1){
+                this.moreStaff("Transfer")
+            }
+            if(!this.staff["Upgrader"] || this.staff["Upgrader"].length < 1){
+                this.moreStaff("Upgrader")
+            }
+            if((!this.staff["Repairer"] || this.staff["Repairer"].length < 1) && (this.tasks["Repairer"] && this.tasks["Repairer"].length > 0)){
+                this.moreStaff("Repairer")
+            }
+            if((!this.staff["Builder"] || this.staff["Builder"].length < 1) && (this.tasks["Builder"] && this.tasks["Builder"].length > 0)){
+                this.moreStaff("Builder")
+            }
+        }
     }
     init() {
 

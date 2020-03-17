@@ -54,16 +54,16 @@ module.exports = function(grunt) {
                 dest: config.serverPath,
                 filter: 'isFile'
             },
-            official: {
+            default: {
                 expand: true,
                 cwd: 'dist',
                 src: '**',
-                dest: config.officialPath,
+                dest: config.defaultPath,
                 filter: 'isFile'
             }
         },
         'watch': {
-            default: {
+            remote: {
                 files: "src/*.ts",
                 tasks: ['clean', "ts", "screeps"]
             },
@@ -79,9 +79,9 @@ module.exports = function(grunt) {
                 files: "src/*.ts",
                 tasks: ['clean', "ts", "copy:server"]
             },
-            official: {
+            default: {
                 files: "src/*.ts",
-                tasks: ['clean', "ts", "copy:official"]
+                tasks: ['clean', "ts", "copy:default"]
             }
         }
     })

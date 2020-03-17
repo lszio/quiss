@@ -7,9 +7,9 @@ export const roomConfig = {
         logging: true
     },
     signal: {
-        scanTasks: 21,
-        scanStaff: 42,
-        scanStructures: 63
+        scanTasks: 15,
+        scanStaff: 21,
+        scanStructures: 36
     },
     taskPriority: {
         Harvester: {
