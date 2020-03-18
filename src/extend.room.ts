@@ -40,7 +40,16 @@ class RoomExtension extends Room {
                 if(Game.creeps[name]){
                     Game.creeps[name].doWork()
                 }else{
-                    if(!Memory.creeps[name] || (Memory.creeps[name].status.active && !Memory.creeps[name].status.spawning)){
+                    if(!Memory.creeps[name]){
+                        Memory.creeps[name] = {
+                            role: roleName,
+                            status: {
+                                working: false,
+                                active: true
+                            }
+                        }
+                    }
+                    if(Memory.creeps[name].status.active && !Memory.creeps[name].status.spawning){
                         this.spawns[0].newTask(roleName, name)
                         Memory.creeps[name].status.spawning = true
                     }
@@ -112,6 +121,17 @@ class RoomExtension extends Room {
             this.memory.staff[role] = []
         }
         let name = [this.name,role,this.staff[role].length+1].join('_')
+        this.memory.staff[role].push(name)
+        if(!Memory.creeps[name]){
+            Memory.creeps[name] = {
+                role: role,
+                status: {
+                    working: false,
+                    active: true,
+                    spawning: true
+                }
+            }
+        }
         this.spawns[0].newTask(role,name)
         let result = `[Room ${this.name}] New staff ${name}`
         this.addLog(result)
