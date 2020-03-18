@@ -25,9 +25,9 @@ class RoomExtension extends Room {
         if(this.signal["scanTasks"] == 0){
             this.scanTasks()
         }
-        if(this.signal["scanStaff"] == 0){
-            this.scanStaff()
-        }
+        // if(this.signal["scanStaff"] == 0){
+        //     this.scanStaff()
+        // }
         // Structure doWork
         for(const type in this.structures){
             for(const structure of this.structures[type]){
