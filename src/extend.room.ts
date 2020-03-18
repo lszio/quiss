@@ -73,10 +73,10 @@ class RoomExtension extends Room {
         }
         // Check Staff
         if(this.spawns[0].tasks && this.spawns[0].tasks.length == 0){
-            if(!this.staff["Harvester"] || this.staff["Harvester"].length < 1){
+            if(!this.staff["Harvester"] || this.staff["Harvester"].length < 2){
                 this.moreStaff("Harvester")
             }
-            if(!this.staff["Transfer"] || this.staff["Transfer"].length < 1){
+            if(!this.staff["Transfer"] || this.staff["Transfer"].length < 2){
                 this.moreStaff("Transfer")
             }
             if(!this.staff["Upgrader"] || this.staff["Upgrader"].length < 1){
@@ -84,9 +84,13 @@ class RoomExtension extends Room {
             }
             if((!this.staff["Repairer"] || this.staff["Repairer"].length < 1) && (this.tasks["Repairer"] && this.tasks["Repairer"].length > 0)){
                 this.moreStaff("Repairer")
+            }else if(this.staff["Repairer"] && this.staff["Repairer"].length > 1 && this.tasks["Repaire"].length == 0){
+                this.lessStaff("Repairer")
             }
-            if((!this.staff["Builder"] || this.staff["Builder"].length < 1) && (this.tasks["Builder"] && this.tasks["Builder"].length > 0)){
+            if((!this.staff["Builder"] || this.staff["Builder"].length < 2) && (this.tasks["Builder"] && this.tasks["Builder"].length > 0)){
                 this.moreStaff("Builder")
+            }else if(this.staff["Builder"] && this.staff["Builder"].length > 0 && this.tasks["Builder"].length == 0){
+                this.lessStaff("Builder")
             }
         }
     }
