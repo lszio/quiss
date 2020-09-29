@@ -22,12 +22,14 @@ export default function (): void {
     //   filter: { structureType: STRUCTURE_CONTROLLER }
     // })[0];
     const controller = upgrader.room.controller;
-    const result = upgrader.upgradeController(controller);
-    if (result === ERR_NOT_IN_RANGE) {
-      upgrader.moveTo(controller);
-    } else if (result === ERR_NOT_ENOUGH_ENERGY) {
-      upgrader.memory.status = "charge";
-      console.log("Harvest");
+    if (controller) {
+      const result = upgrader.upgradeController(controller);
+      if (result === ERR_NOT_IN_RANGE) {
+        upgrader.moveTo(controller);
+      } else if (result === ERR_NOT_ENOUGH_ENERGY) {
+        upgrader.memory.status = "charge";
+        console.log("Harvest");
+      }
     }
   }
 }
