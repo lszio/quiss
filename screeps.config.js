@@ -7,7 +7,7 @@ export default {
     hostname: "screeps.com",
     port: 443,
     path: "/",
-    branch: "main"
+    branch: "default"
   },
   sim: {
     token: config.token,
