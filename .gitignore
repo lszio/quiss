@@ -8,3 +8,6 @@ dist
 
 temp
 private.js
+
+screeps-multimeter.json
+.screeps-multimeter.history
