@@ -1,17 +1,20 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 "use strict";
 
 import clear from "rollup-plugin-clear";
-import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
-import typescript from "rollup-plugin-typescript2";
+import resolve from "@rollup/plugin-node-resolve";
 import screeps from "rollup-plugin-screeps";
-import config from "./screeps.config.js";
+import typescript from "rollup-plugin-typescript2";
 
 let cfg;
 const dest = process.env.DEST;
 if (!dest) {
   console.log("No destination specified - code will be compiled but not uploaded");
-} else if ((cfg = config[dest]) == null) {
+} else if ((cfg = require("./screeps.json")[dest]) == null) {
   throw new Error("Invalid upload destination");
 }
 
@@ -24,10 +27,17 @@ export default {
   },
 
   plugins: [
-    clear({ targets: ["dist"] }),
+    clear({
+      targets: ["dist"]
+    }),
     resolve(),
     commonjs(),
-    typescript({ tsconfig: "./tsconfig.json" }),
-    screeps({ config: cfg, dryRun: cfg == null })
+    typescript({
+      tsconfig: "./tsconfig.json"
+    }),
+    screeps({
+      config: cfg,
+      dryRun: cfg == null
+    })
   ]
 };
