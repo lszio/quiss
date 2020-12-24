@@ -1,5 +1,4 @@
 export default function (): void {
-  // role Upgrader
   let spawn = "Spawn1";
   for (let name in Game.spawns) {
     spawn = name;
@@ -16,7 +15,7 @@ export default function (): void {
 
   const source = Game.spawns[spawn].room.find(FIND_SOURCES)[0];
   const upgrader = Game.creeps.Upgrader;
-  const repairer = Game.creeps.Builder;
+  const repairer = Game.creeps.Repairer;
   const builder = Game.creeps.Builder;
   const controller = upgrader.room.controller;
   const sites = Game.spawns[spawn].room.find(FIND_CONSTRUCTION_SITES);
@@ -78,11 +77,13 @@ export default function (): void {
   if (controller) {
     upgrade(upgrader, controller);
   }
+
   if (sites.length > 0) {
     build(builder, sites[0]);
   } else if (controller) {
     upgrade(builder, controller);
   }
+
   if (structures.length > 0) {
     repair(repairer, structures[0]);
   } else if (controller) {
