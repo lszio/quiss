@@ -1,30 +1,4 @@
 export default function (): void {
-  let spawn = "Spawn1";
-  for (let name in Game.spawns) {
-    spawn = name;
-  }
-  if (!Game.creeps.Upgrader && !Game.spawns[spawn].spawning) {
-    Game.spawns[spawn].spawnCreep([WORK, CARRY, MOVE], "Upgrader");
-  }
-  if (!Game.creeps.Builder && !Game.spawns[spawn].spawning) {
-    Game.spawns[spawn].spawnCreep([WORK, CARRY, MOVE], "Builder");
-  }
-  if (!Game.creeps.Repairer && !Game.spawns[spawn].spawning) {
-    Game.spawns[spawn].spawnCreep([WORK, CARRY, MOVE], "Repairer");
-  }
-
-  const source = Game.spawns[spawn].room.find(FIND_SOURCES)[0];
-  const upgrader = Game.creeps.Upgrader;
-  const repairer = Game.creeps.Repairer;
-  const builder = Game.creeps.Builder;
-  const controller = upgrader.room.controller;
-  const sites = Game.spawns[spawn].room.find(FIND_CONSTRUCTION_SITES);
-  const structures = Game.spawns[spawn].room.find(FIND_STRUCTURES, {
-    filter: structure => {
-      return structure.hits < structure.hitsMax;
-    }
-  });
-
   const harvest = (creep: Creep, source: Source) => {
     if (creep.store.getFreeCapacity(RESOURCE_ENERGY) > 0) {
       if (creep.harvest(source) === ERR_NOT_IN_RANGE) {
@@ -35,7 +9,19 @@ export default function (): void {
     }
   };
 
-  const upgrade = (creep: Creep, controller: StructureController) => {
+  const store = (creep: Creep, structure: Structure, source: Source) => {
+    if (creep.memory.status === "work") {
+      const result = creep.transfer(structure, RESOURCE_ENERGY);
+      if (result === ERR_NOT_IN_RANGE) {
+      } else if (result === ERR_NOT_ENOUGH_ENERGY) {
+        creep.memory.status = "charge";
+      }
+    } else {
+      harvest(creep, source);
+    }
+  };
+
+  const upgrade = (creep: Creep, controller: StructureController, source: Source) => {
     if (creep.memory.status === "work") {
       const result = creep.upgradeController(controller);
       if (result === ERR_NOT_IN_RANGE) {
@@ -48,7 +34,7 @@ export default function (): void {
     }
   };
 
-  const build = (creep: Creep, site: ConstructionSite) => {
+  const build = (creep: Creep, site: ConstructionSite, source: Source) => {
     if (creep.memory.status === "work") {
       const result = creep.build(site);
       if (result === ERR_NOT_IN_RANGE) {
@@ -61,7 +47,7 @@ export default function (): void {
     }
   };
 
-  const repair = (creep: Creep, structure: Structure) => {
+  const repair = (creep: Creep, structure: Structure, source: Source) => {
     if (creep.memory.status === "work") {
       const result = creep.repair(structure);
       if (result === ERR_NOT_IN_RANGE) {
@@ -73,20 +59,52 @@ export default function (): void {
       harvest(creep, source);
     }
   };
+  for (const name in Game.rooms) {
+    const room = Game.rooms[name];
+    const spawn = Game.spawns.Spawn1;
+    const source = room.find(FIND_SOURCES)[0];
+    const harvester = Game.creeps.Harvester;
+    const upgrader = Game.creeps.Upgrader;
+    const repairer = Game.creeps.Repairer;
+    const builder = Game.creeps.Builder;
+    const controller = room.controller;
+    const sites = spawn.room.find(FIND_CONSTRUCTION_SITES);
+    const structures = spawn.room.find(FIND_STRUCTURES, {
+      filter: structure => {
+        return structure.hits < structure.hitsMax;
+      }
+    });
 
-  if (controller) {
-    upgrade(upgrader, controller);
-  }
+    if (!Game.creeps.Harvester && !spawn.spawning) {
+      spawn.spawnCreep([WORK, CARRY, MOVE], "Harvester");
+    } else if (!Game.creeps.Upgrader && !spawn.spawning) {
+      spawn.spawnCreep([WORK, CARRY, MOVE], "Upgrader");
+    } else if (!Game.creeps.Builder && !spawn.spawning) {
+      spawn.spawnCreep([WORK, CARRY, MOVE], "Builder");
+    } else if (!Game.creeps.Repairer && !spawn.spawning) {
+      spawn.spawnCreep([WORK, CARRY, MOVE], "Repairer");
+    }
 
-  if (sites.length > 0) {
-    build(builder, sites[0]);
-  } else if (controller) {
-    upgrade(builder, controller);
-  }
+    if (spawn.store.getFreeCapacity(RESOURCE_ENERGY) > 0) {
+      store(harvester, spawn, source);
+    } else if (controller) {
+      upgrade(harvester, controller, source);
+    }
 
-  if (structures.length > 0) {
-    repair(repairer, structures[0]);
-  } else if (controller) {
-    upgrade(repairer, controller);
+    if (controller) {
+      upgrade(upgrader, controller, source);
+    }
+
+    if (sites.length > 0) {
+      build(builder, sites[0], source);
+    } else if (controller) {
+      upgrade(builder, controller, source);
+    }
+
+    if (structures.length > 0) {
+      repair(repairer, structures[0], source);
+    } else if (controller) {
+      upgrade(repairer, controller, source);
+    }
   }
 }
