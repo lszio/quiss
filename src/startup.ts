@@ -13,6 +13,7 @@ export default function (): void {
     if (creep.memory.status === "work") {
       const result = creep.transfer(structure, RESOURCE_ENERGY);
       if (result === ERR_NOT_IN_RANGE) {
+        creep.moveTo(structure);
       } else if (result === ERR_NOT_ENOUGH_ENERGY) {
         creep.memory.status = "charge";
       }
@@ -61,7 +62,11 @@ export default function (): void {
   };
   for (const name in Game.rooms) {
     const room = Game.rooms[name];
-    const spawn = Game.spawns.Spawn1;
+    const spawn = room.find(FIND_STRUCTURES, {
+      filter: s => {
+        return s.structureType === STRUCTURE_SPAWN;
+      }
+    })[0] as StructureSpawn;
     const source = room.find(FIND_SOURCES)[0];
     const harvester = Game.creeps.Harvester;
     const upgrader = Game.creeps.Upgrader;
@@ -77,34 +82,38 @@ export default function (): void {
 
     if (!Game.creeps.Harvester && !spawn.spawning) {
       spawn.spawnCreep([WORK, CARRY, MOVE], "Harvester");
-    } else if (!Game.creeps.Upgrader && !spawn.spawning) {
+    } else {
+      if (spawn.store.getFreeCapacity(RESOURCE_ENERGY) > 0) {
+        store(harvester, spawn, source);
+      } else if (controller) {
+        upgrade(harvester, controller, source);
+      }
+    }
+
+    if (!Game.creeps.Upgrader && !spawn.spawning) {
       spawn.spawnCreep([WORK, CARRY, MOVE], "Upgrader");
-    } else if (!Game.creeps.Builder && !spawn.spawning) {
+    } else {
+      if (controller) {
+        upgrade(upgrader, controller, source);
+      }
+    }
+    if (!Game.creeps.Builder && !spawn.spawning) {
       spawn.spawnCreep([WORK, CARRY, MOVE], "Builder");
-    } else if (!Game.creeps.Repairer && !spawn.spawning) {
+    } else {
+      if (sites.length > 0) {
+        build(builder, sites[0], source);
+      } else if (controller) {
+        upgrade(builder, controller, source);
+      }
+    }
+    if (!Game.creeps.Repairer && !spawn.spawning) {
       spawn.spawnCreep([WORK, CARRY, MOVE], "Repairer");
-    }
-
-    if (spawn.store.getFreeCapacity(RESOURCE_ENERGY) > 0) {
-      store(harvester, spawn, source);
-    } else if (controller) {
-      upgrade(harvester, controller, source);
-    }
-
-    if (controller) {
-      upgrade(upgrader, controller, source);
-    }
-
-    if (sites.length > 0) {
-      build(builder, sites[0], source);
-    } else if (controller) {
-      upgrade(builder, controller, source);
-    }
-
-    if (structures.length > 0) {
-      repair(repairer, structures[0], source);
-    } else if (controller) {
-      upgrade(repairer, controller, source);
+    } else {
+      if (structures.length > 0) {
+        repair(repairer, structures[0], source);
+      } else if (controller) {
+        upgrade(repairer, controller, source);
+      }
     }
   }
 }
