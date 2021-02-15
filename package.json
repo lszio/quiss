@@ -1,7 +1,7 @@
 {
   "name": "screepsai",
-  "version": "3.0.0",
-  "description": "",
+  "version": "0.0.1",
+  "description": "My ai for screeps.",
   "main": "index.js",
   "//": "If you add or change the names of destinations in screeps.json, make sure you update these scripts to reflect the changes",
   "scripts": {
@@ -20,11 +20,8 @@
     "watch-server": "rollup -cw --environment DEST:server",
     "watch-season": "rollup -cw --environment DEST:season"
   },
-  "author": "",
+  "author": "Liszt21",
   "license": "Unlicense",
-  "engines": {
-    "node": "10.x || 12.x"
-  },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^11.1.0",
     "@rollup/plugin-node-resolve": "^7.1.3",
