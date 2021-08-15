@@ -1,3 +1,4 @@
+// "use strict";
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
@@ -48,14 +49,11 @@ export default {
   },
 
   plugins: [
-    clear({
-      targets: ["dist"]
-    }),
-    resolve(),
+    clear({ targets: ["dist"] }),
+    resolve({ rootDir: "src" }),
     commonjs(),
-    typescript({
-      tsconfig: "./tsconfig.json"
-    }),
+    typescript({ tsconfig: "./tsconfig.json" }),
+    // screeps({config: config, dryRun: config == null})
     Sync
   ]
 };

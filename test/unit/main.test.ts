@@ -1,6 +1,6 @@
-import {assert} from "chai";
-import {loop} from "../../src/main";
-import {Game, Memory} from "./mock"
+import { assert } from "chai";
+import { loop } from "../../src/main";
+import { Game, Memory } from "./mock"
 
 describe("main", () => {
   before(() => {
@@ -21,5 +21,17 @@ describe("main", () => {
 
   it("should return void when called with no context", () => {
     assert.isUndefined(loop());
+  });
+
+  it("Automatically delete memory of missing creeps", () => {
+    Memory.creeps.persistValue = "any value";
+    Memory.creeps.notPersistValue = "any value";
+
+    Game.creeps.persistValue = "any value";
+
+    loop();
+
+    assert.isDefined(Memory.creeps.persistValue);
+    assert.isUndefined(Memory.creeps.notPersistValue);
   });
 });

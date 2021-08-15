@@ -23,20 +23,16 @@
     "path": "/season",
     "branch": "main"
   },
-  "server": {
+  "private": {
     "email": "username",
     "password": "Password",
     "protocol": "http",
     "hostname": "1.2.3.4",
     "port": 21025,
     "path": "/",
-    "branch": "default"
+    "branch": "main"
   },
   "local": {
-    "protocol": "http",
-    "hostname": "localhost",
-    "port": 21025,
-    "path": "/",
-    "branch": "default"
+    "copyPath": ""
   }
 }
