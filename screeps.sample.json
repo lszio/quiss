@@ -33,6 +33,12 @@
     "branch": "main"
   },
   "local": {
-    "copyPath": ""
+    "hostname": "127.0.0.1",
+    "port": 21025,
+    "branch": "default"
+  },
+  "default": {
+    "hostname": "screeps.com",
+    "branch": "default"
   }
 }
