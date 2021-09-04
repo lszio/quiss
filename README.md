@@ -1,6 +1,6 @@
-# ScreepsAI
+# Quiss
 
-My AI for [screeps](http://screeps.com)
+AI for [screeps](http://screeps.com)
 
 ## Usage
 
