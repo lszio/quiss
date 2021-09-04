@@ -1,12 +1,16 @@
 // "use strict";
-
+/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import clear from "rollup-plugin-clear";
 import commonjs from "@rollup/plugin-commonjs";
 import copy from "rollup-plugin-copy";
 import resolve from "@rollup/plugin-node-resolve";
 import screeps from "rollup-plugin-screeps";
 import typescript from "rollup-plugin-typescript2";
-import os from "os";
 
 let config;
 const dest = process.env.DEST;
@@ -18,23 +22,9 @@ if (!dest) {
 
 const remotep = config.token || (config.email && config.password);
 
-function concatPath(host="screeps.com", port, branch="default"){
-  host.match(/(\d{1,3}.){3}\d{1,3}/) && (
-      host = host.replace(/\./g, "_")
-  )
-  port && (
-      host = `${host}___${port}`
-  )
-  let folder = ""
-  if (os.type() === "Windows_NT"){
-      folder = "/AppData/Local/Screeps/scripts"
-  } else {
-      folder = "" // TODO
-  }
-  return process.env.HOME + folder + "/" + host + "/" + branch
+function concatPath(host, port, branch) {
+  pass
 }
-
-const localPath = concatPath(config.hostname, config.port, config.branch)
 
 export default {
   input: "src/main.ts",
@@ -49,17 +39,18 @@ export default {
     resolve({ rootDir: "src" }),
     commonjs(),
     typescript({ tsconfig: "./tsconfig.json" }),
+    // screeps({config: config, dryRun: config == null})
     remotep
       ? screeps({ config, dryRun: !config })
       : copy({
           targets: [
             {
               src: "dist/main.js",
-              dest: localPath
+              dest: config.copyPath
             },
             {
               src: "dist/main.js.map",
-              dest: localPath,
+              dest: config.copyPath,
               rename: name => name + ".map.js",
               transform: contents => `module.exports = ${contents.toString()};`
             }
